@@ -1,0 +1,8 @@
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+.gemini/
+.n8n/
+.DS_Store
+Thumbs.db
