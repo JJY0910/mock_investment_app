@@ -23016,7 +23016,7 @@ Fp(a,b,c){var s=0,r=A.G(t.y),q,p,o
 var $async$Fp=A.H(function(d,e){if(d===1)return A.D(e,r)
 for(;;)switch(s){case 0:o=A
 s=3
-return A.y(a.xE(b,null,c,null),$async$Fp)
+return A.y(a.xE(b,null,null,c),$async$Fp)
 case 3:p=o.cv(e.b,0,null)
 s=4
 return A.y(A.alw(p,B.D9,"_self"),$async$Fp)
@@ -68881,7 +68881,7 @@ a_n(a,b,c,d,e){var s=0,r=A.G(t.PM),q,p=this,o,n,m,l,k
 var $async$tS=A.H(function(f,g){if(f===1)return A.D(g,r)
 for(;;)switch(s){case 0:l=t.N
 k=A.ag(["provider",A.aBI(a)],l,l)
-k.m(0,"redirect_to",c)
+k.m(0,"scopes",d)
 o=p.ay
 s=o===B.ef?3:4
 break
@@ -70714,7 +70714,7 @@ jg(){var s=0,r=A.G(t.y),q,p=2,o=[],n=this,m,l,k
 var $async$jg=A.H(function(a,b){if(a===1){o.push(b)
 s=p}for(;;)switch(s){case 0:p=4
 s=7
-return A.y(A.Fp(n.a.gh8(),B.H6,"https://trader-lab.cloud/auth/callback"),$async$jg)
+return A.y(A.Fp(n.a.gh8(),B.H6,"profile_nickname account_email"),$async$jg)
 case 7:q=!0
 s=1
 break
