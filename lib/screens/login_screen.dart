@@ -110,20 +110,40 @@ class LoginScreen extends StatelessWidget {
                 // 에러 메시지
                 Consumer<AuthProvider>(
                   builder: (context, authProvider, child) {
-                    if (authProvider.error != null) {
-                      return Padding(
-                        padding: EdgeInsets.only(top: 24),
-                        child: Text(
-                          authProvider.error!,
-                          style: TextStyle(
-                            color: Colors.red[300],
-                            fontSize: 14,
+                    return Column(
+                      children: [
+                        if (authProvider.error != null)
+                          Padding(
+                            padding: EdgeInsets.only(top: 24),
+                            child: Text(
+                              authProvider.error!,
+                              style: TextStyle(color: Colors.red[300], fontSize: 14),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                          textAlign: TextAlign.center,
+                        // 화면 디버그 로그 표시
+                        SizedBox(height: 20),
+                        Container(
+                          height: 150,
+                          width: double.infinity,
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.black54,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.white24),
+                          ),
+                          child: ListView.builder(
+                            itemCount: authProvider.logs.length,
+                            itemBuilder: (context, index) {
+                              return Text(
+                                authProvider.logs[index],
+                                style: TextStyle(color: Colors.greenAccent, fontSize: 10, fontFamily: 'monospace'),
+                              );
+                            },
+                          ),
                         ),
-                      );
-                    }
-                    return SizedBox.shrink();
+                      ],
+                    );
                   },
                 ),
               ],

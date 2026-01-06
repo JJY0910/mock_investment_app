@@ -9,9 +9,10 @@ class AuthProvider extends ChangeNotifier {
   User? _currentUser;
   bool _isLoading = false;
   String? _error;
+  final List<String> _logs = []; // 디버그 로그 저장용
   
   AuthProvider() {
-    print('--- [AuthProvider] Initializing ---');
+    addLog('AuthProvider initialized');
     _init();
   }
   
@@ -19,9 +20,17 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isAuthenticated => _currentUser != null;
   String? get error => _error;
+  List<String> get logs => _logs; // 로그 접근자
+  
+  void addLog(String message) {
+    print('[DEBUG] $message');
+    _logs.add('${DateTime.now().toString().split(' ').last} $message');
+    notifyListeners();
+  }
   
   /// 초기화
   void _init() {
+    addLog('Checking initial session...');
     // 1. 초기 세션 확인 (약간의 딜레이 후 확인하여 URL 처리 시간 확보)
     Future.delayed(const Duration(milliseconds: 100), () {
       final session = Supabase.instance.client.auth.currentSession;
@@ -36,28 +45,27 @@ class AuthProvider extends ChangeNotifier {
     
     // 2. 인증 상태 변경 감지
     _authService.authStateChanges.listen((AuthState state) async {
-      print('--- [AuthProvider] AuthState Changed: ${state.event} ---');
+      addLog('AuthState Changed: ${state.event}');
       
       final session = state.session;
       _currentUser = session?.user;
       
       if (_currentUser != null) {
-        print('--- [AuthProvider] User active: ${_currentUser!.email} ---');
+        addLog('User active: ${_currentUser!.email}');
         
         // 로그인 성공 시 프로필 생성 시도
         if (state.event == AuthChangeEvent.signedIn || state.event == AuthChangeEvent.initialSession) {
           try {
-            print('--- [AuthProvider] Attempting profile upsert ---');
+            addLog('Attempting profile upsert...');
             await _authService.upsertUserProfile(_currentUser!);
-            print('--- [AuthProvider] Profile upsert successful ---');
+            addLog('Profile upsert successful');
           } catch (e) {
-            print('--- [AuthProvider] Profile upsert failed: $e ---');
-            // 프로필 생성 실패해도 로그인은 유지되도록 에러만 기록
+            addLog('Profile upsert failed: $e');
             _error = '프로필 설정 중 오류가 발생했습니다.';
           }
         }
       } else {
-        print('--- [AuthProvider] No user active ---');
+        addLog('No user active');
       }
       
       notifyListeners();
@@ -71,8 +79,11 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
     
     try {
+      addLog('Signing in with Kakao...');
       await _authService.signInWithKakao();
+      addLog('Sign in initiated');
     } catch (e) {
+      addLog('Sign in failed: $e');
       _error = '로그인 실패: $e';
       rethrow;
     } finally {
