@@ -1,0 +1,8 @@
+﻿{
+  "name": "mock_investment_app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "vercel-build": "bash build.sh"
+  }
+}

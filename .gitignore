@@ -1,7 +1,8 @@
-.dart_tool/
+﻿.dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
 .gemini/
 .n8n/
 .DS_Store
 Thumbs.db
+build/
