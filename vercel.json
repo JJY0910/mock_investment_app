@@ -1,0 +1,15 @@
+{
+    "redirects": [
+        {
+            "source": "/(.*)",
+            "has": [
+                {
+                    "type": "host",
+                    "value": "trader-lab.cloud"
+                }
+            ],
+            "destination": "https://www.trader-lab.cloud/$1",
+            "permanent": true
+        }
+    ]
+}
