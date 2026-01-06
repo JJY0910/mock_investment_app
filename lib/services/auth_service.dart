@@ -11,11 +11,17 @@ class AuthService {
   Stream<AuthState> get authStateChanges => _supabase.auth.onAuthStateChange;
   
   /// 카카오 로그인
-  Future<AuthResponse> signInWithKakao() async {
-    return await _supabase.auth.signInWithOAuth(
-      Provider.kakao,
-      redirectTo: 'https://trader-lab.cloud/auth/callback',
-    );
+  Future<bool> signInWithKakao() async {
+    try {
+      await _supabase.auth.signInWithOAuth(
+        OAuthProvider.kakao,
+        redirectTo: 'https://trader-lab.cloud/auth/callback',
+      );
+      return true;
+    } catch (e) {
+      print('[AuthService] Kakao login error: $e');
+      return false;
+    }
   }
   
   /// 로그아웃
