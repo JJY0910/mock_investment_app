@@ -15,6 +15,7 @@ class AuthService {
     try {
       await _supabase.auth.signInWithOAuth(
         OAuthProvider.kakao,
+        redirectTo: Uri.base.origin,
         scopes: 'profile_nickname account_email',
       );
       return true;
