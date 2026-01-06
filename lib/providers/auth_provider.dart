@@ -22,21 +22,24 @@ class AuthProvider extends ChangeNotifier {
   
   /// 초기화
   void _init() {
-    // 1. 현재 즉시 사용 가능한 세션 확인
-    final session = Supabase.instance.client.auth.currentSession;
-    _currentUser = session?.user;
-    
-    if (_currentUser != null) {
-      print('--- [AuthProvider] Existing session found: ${_currentUser!.email} ---');
-    } else {
-      print('--- [AuthProvider] No active session on startup ---');
-    }
+    // 1. 초기 세션 확인 (약간의 딜레이 후 확인하여 URL 처리 시간 확보)
+    Future.delayed(const Duration(milliseconds: 100), () {
+      final session = Supabase.instance.client.auth.currentSession;
+      if (session != null) {
+        print('--- [AuthProvider] Delayed check: Session found for ${session.user.email} ---');
+        _currentUser = session.user;
+        notifyListeners();
+      } else {
+        print('--- [AuthProvider] Delayed check: No session found ---');
+      }
+    });
     
     // 2. 인증 상태 변경 감지
     _authService.authStateChanges.listen((AuthState state) async {
       print('--- [AuthProvider] AuthState Changed: ${state.event} ---');
       
-      _currentUser = state.session?.user;
+      final session = state.session;
+      _currentUser = session?.user;
       
       if (_currentUser != null) {
         print('--- [AuthProvider] User active: ${_currentUser!.email} ---');
