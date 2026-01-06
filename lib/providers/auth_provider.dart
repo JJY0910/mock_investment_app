@@ -11,6 +11,7 @@ class AuthProvider extends ChangeNotifier {
   String? _error;
   
   AuthProvider() {
+    print('--- [AuthProvider] Initializing ---');
     _init();
   }
   
@@ -21,20 +22,39 @@ class AuthProvider extends ChangeNotifier {
   
   /// 초기화
   void _init() {
-    // 현재 세션 확인
-    _currentUser = _authService.currentUser;
+    // 1. 현재 즉시 사용 가능한 세션 확인
+    final session = Supabase.instance.client.auth.currentSession;
+    _currentUser = session?.user;
     
-    // 인증 상태 변경 감지
+    if (_currentUser != null) {
+      print('--- [AuthProvider] Existing session found: ${_currentUser!.email} ---');
+    } else {
+      print('--- [AuthProvider] No active session on startup ---');
+    }
+    
+    // 2. 인증 상태 변경 감지
     _authService.authStateChanges.listen((AuthState state) async {
+      print('--- [AuthProvider] AuthState Changed: ${state.event} ---');
+      
       _currentUser = state.session?.user;
       
-      // 첫 로그인 시 프로필 생성
-      if (_currentUser != null && state.event == AuthChangeEvent.signedIn) {
-        try {
-          await _authService.upsertUserProfile(_currentUser!);
-        } catch (e) {
-          _error = '프로필 생성 실패: $e';
+      if (_currentUser != null) {
+        print('--- [AuthProvider] User active: ${_currentUser!.email} ---');
+        
+        // 로그인 성공 시 프로필 생성 시도
+        if (state.event == AuthChangeEvent.signedIn || state.event == AuthChangeEvent.initialSession) {
+          try {
+            print('--- [AuthProvider] Attempting profile upsert ---');
+            await _authService.upsertUserProfile(_currentUser!);
+            print('--- [AuthProvider] Profile upsert successful ---');
+          } catch (e) {
+            print('--- [AuthProvider] Profile upsert failed: $e ---');
+            // 프로필 생성 실패해도 로그인은 유지되도록 에러만 기록
+            _error = '프로필 설정 중 오류가 발생했습니다.';
+          }
         }
+      } else {
+        print('--- [AuthProvider] No user active ---');
       }
       
       notifyListeners();

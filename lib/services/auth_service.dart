@@ -15,7 +15,7 @@ class AuthService {
     try {
       await _supabase.auth.signInWithOAuth(
         OAuthProvider.kakao,
-        scopes: 'profile_nickname account_email', // 이메일 포함
+        scopes: 'profile_nickname account_email',
       );
       return true;
     } catch (e) {
@@ -29,34 +29,20 @@ class AuthService {
     await _supabase.auth.signOut();
   }
   
-  /// 사용자 프로필 생성/업데이트 (첫 로그인 시)
+  /// 사용자 프로필 생성/업데이트
   Future<void> upsertUserProfile(User user) async {
     try {
-      // 카카오 정보 추출
-      final kakaoId = user.userMetadata?['sub'] as String?;
-      final email = user.email;
-      final username = user.userMetadata?['name'] as String? ?? 
-                       user.userMetadata?['kakao_account']?['profile']?['nickname'] as String? ??
-                       'User';
+      final username = user.userMetadata?['name'] as String? ?? 'User';
       
-      // 프로필 UPSERT
-      await _supabase
-          .from('profiles')
-          .upsert({
-            'id': user.id,
-            'kakao_id': kakaoId,
-            'email': email,
-            'username': username,
-            'balance': 100000000.00, // 초기 1억
-            'initial_balance': 100000000.00,
-          }, 
-          onConflict: 'id' // id 기준 중복 시 업데이트
-      );
-      
-      print('[AuthService] Profile upserted for user: ${user.id}');
+      await _supabase.from('profiles').upsert({
+        'id': user.id,
+        'email': user.email ?? '',
+        'username': username,
+        'balance': 100000000.0,
+        'initial_balance': 100000000.0,
+      });
     } catch (e) {
-      print('[AuthService] Error upserting profile: $e');
-      rethrow;
+      print('[AuthService] Profile error: $e');
     }
   }
 }

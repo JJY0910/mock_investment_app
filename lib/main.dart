@@ -6,7 +6,6 @@ import 'providers/price_provider.dart';
 import 'providers/auth_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
-import 'dart:html' as html;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,37 +15,13 @@ void main() async {
     url: SupabaseConfig.supabaseUrl,
     anonKey: SupabaseConfig.supabaseAnonKey,
     authOptions: FlutterAuthClientOptions(
-      authFlowType: AuthFlowType.implicit,
+      authFlowType: AuthFlowType.pkce,
     ),
   );
 
   SupabaseConfig.setInitialized();
-  
-  // OAuth 콜백 에러 확인 및 로깅
-  _checkOAuthErrors();
 
   runApp(const MyApp());
-}
-
-/// OAuth 콜백 에러를 확인하고 콘솔에 출력
-void _checkOAuthErrors() {
-  final uri = Uri.parse(html.window.location.href);
-  
-  if (uri.queryParameters.containsKey('error')) {
-    final error = uri.queryParameters['error'];
-    final errorCode = uri.queryParameters['error_code'];
-    final errorDescription = uri.queryParameters['error_description'];
-    
-    print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    print('🔴 OAuth Callback Error Detected!');
-    print('Error: $error');
-    print('Error Code: $errorCode');
-    print('Description: $errorDescription');
-    print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    
-    // URL에서 에러 파라미터 제거
-    html.window.history.replaceState(null, '', '/');
-  }
 }
 
 class MyApp extends StatelessWidget {
