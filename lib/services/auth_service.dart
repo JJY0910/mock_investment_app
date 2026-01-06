@@ -13,8 +13,12 @@ class AuthService {
   /// 카카오 로그인
   Future<bool> signInWithKakao() async {
     try {
+      final redirectUrl = Uri.base.origin;
+      print('[AuthService] Redirect URL: $redirectUrl');
+      
       await _supabase.auth.signInWithOAuth(
         OAuthProvider.kakao,
+        redirectTo: redirectUrl,
         scopes: 'profile_nickname account_email',
       );
       return true;

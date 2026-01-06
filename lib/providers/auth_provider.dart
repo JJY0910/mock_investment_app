@@ -13,6 +13,7 @@ class AuthProvider extends ChangeNotifier {
   
   AuthProvider() {
     addLog('AuthProvider initialized');
+    addLog('Current Origin: ${Uri.base.origin}');
     _init();
   }
   
