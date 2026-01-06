@@ -1,18 +1,17 @@
-﻿#!/bin/bash
+﻿#!/usr/bin/env bash
 set -e
 
-# Flutter SDK 다운로드 및 설치 (최초 1회만)
+# Flutter SDK 다운로드 (최초 1회)
 if [ ! -d "flutter" ]; then
   echo "Downloading Flutter SDK..."
   git clone --depth 1 --branch stable https://github.com/flutter/flutter.git
 fi
 
-export PATH=pwd/flutter/bin:$PATH
+export PATH="C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app/flutter/bin:"
 
 flutter config --no-analytics
 flutter --version
-
 flutter pub get
 
-# Flutter Web Release Build
-flutter build web --release --web-renderer canvaskit
+# Flutter 3.38.x 기준: --web-renderer 옵션 없음
+flutter build web --release
