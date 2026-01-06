@@ -32,19 +32,22 @@ class AuthProvider extends ChangeNotifier {
   /// 초기화
   void _init() {
     addLog('Checking initial session...');
-    // 1. 초기 세션 확인 (약간의 딜레이 후 확인하여 URL 처리 시간 확보)
-    Future.delayed(const Duration(milliseconds: 100), () {
+    
+    // 1. 초기 세션 확인
+    try {
       final session = Supabase.instance.client.auth.currentSession;
       if (session != null) {
-        print('--- [AuthProvider] Delayed check: Session found for ${session.user.email} ---');
+        addLog('Initial session found: ${session.user.email}');
         _currentUser = session.user;
         notifyListeners();
       } else {
-        print('--- [AuthProvider] Delayed check: No session found ---');
+        addLog('No initial session.');
       }
-    });
+    } catch (e) {
+      addLog('Session check error: $e');
+    }
     
-    // 2. 인증 상태 변경 감지
+    // 2. 인증 상태 변경 감지 (이벤트 기반 확실한 처리)
     _authService.authStateChanges.listen((AuthState state) async {
       addLog('AuthState Changed: ${state.event}');
       
@@ -57,16 +60,15 @@ class AuthProvider extends ChangeNotifier {
         // 로그인 성공 시 프로필 생성 시도
         if (state.event == AuthChangeEvent.signedIn || state.event == AuthChangeEvent.initialSession) {
           try {
-            addLog('Attempting profile upsert...');
+            addLog('Upserting profile...');
             await _authService.upsertUserProfile(_currentUser!);
-            addLog('Profile upsert successful');
+            addLog('Profile OK');
           } catch (e) {
-            addLog('Profile upsert failed: $e');
-            _error = '프로필 설정 중 오류가 발생했습니다.';
+            addLog('Profile Error: $e');
           }
         }
-      } else {
-        addLog('No user active');
+      } else if (state.event == AuthChangeEvent.signedOut) {
+         addLog('User signed out');
       }
       
       notifyListeners();

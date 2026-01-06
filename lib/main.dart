@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
+
 import 'config/supabase_config.dart';
 import 'providers/price_provider.dart';
 import 'providers/auth_provider.dart';
@@ -9,6 +14,19 @@ import 'screens/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // [Web] 도메인 일관성 강제 (non-www -> www)
+  if (kIsWeb) {
+    final currentUrl = html.window.location.href;
+    if (currentUrl.contains('://trader-lab.cloud')) {
+      final newUrl = currentUrl.replaceFirst('://trader-lab.cloud', '://www.trader-lab.cloud');
+      html.window.location.replace(newUrl);
+      return; // 리다이렉트 실행 후 앱 초기화 중단
+    }
+  }
+
+  // URL # 제거
+  usePathUrlStrategy();
 
   // Supabase 초기화
   await Supabase.initialize(
