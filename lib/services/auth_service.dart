@@ -15,7 +15,6 @@ class AuthService {
     try {
       await _supabase.auth.signInWithOAuth(
         OAuthProvider.kakao,
-        redirectTo: 'https://www.trader-lab.cloud',
         scopes: 'profile_nickname account_email',
       );
       return true;
