@@ -16,6 +16,7 @@ class AuthService {
       await _supabase.auth.signInWithOAuth(
         OAuthProvider.kakao,
         redirectTo: 'https://trader-lab.cloud/auth/callback',
+        scopes: 'profile_nickname', // 이메일 제외
       );
       return true;
     } catch (e) {
