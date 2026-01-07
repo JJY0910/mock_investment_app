@@ -44,19 +44,35 @@ class _MyAppState extends State<MyApp> {
     _initAuthListener();
   }
 
+  bool _isNavigating = false;
+
   void _initAuthListener() {
     final supabase = Supabase.instance.client;
 
-    // 1) 앱 시작 시점 세션 확인 (PostFrame으로 안전하게 실행)
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final uri = Uri.base;
+      final bool isCallback = uri.queryParameters.containsKey('code') || 
+                              uri.queryParameters.containsKey('error') ||
+                              uri.queryParameters.containsKey('state');
+
+      print('[$DateTime.now()] [Auth] App Start. Callback Detected: $isCallback');
+      print('[$DateTime.now()] [Auth] Current URL: $uri');
+
+      // 1) 콜백 처리 (Supabase SDK가 이미 처리 중일 수 있으므로 세션 대기)
+      if (isCallback) {
+        print('[$DateTime.now()] [Auth] OAuth Callback processing...');
+      }
+
       final session = supabase.auth.currentSession;
       if (session != null) {
-        navigatorKey.currentState?.pushReplacementNamed('/home');
-        // 세션이 있어서 홈으로 바로 갈 때도 URL 정리 한 번 수행
-        clearOAuthQueryFromUrl();
+        print('[$DateTime.now()] [Auth] Session Found: ${session.user.email}');
+        _navigateToHome();
       } else {
-        // 세션 없으면 로그인 화면으로
-        navigatorKey.currentState?.pushReplacementNamed('/login');
+        print('[$DateTime.now()] [Auth] No Session. Staying at Login.');
+        // 명시적으로 로그인 화면 이동 (이미 /login 라우트라면 무시됨)
+        if (uri.path != '/login') {
+           navigatorKey.currentState?.pushReplacementNamed('/login');
+        }
       }
     });
 
@@ -64,16 +80,30 @@ class _MyAppState extends State<MyApp> {
     supabase.auth.onAuthStateChange.listen((data) {
       final event = data.event;
       final session = data.session;
+      
+      print('[$DateTime.now()] [AuthEvent] $event. Session: ${session != null}');
 
       if (session != null && (event == AuthChangeEvent.signedIn || event == AuthChangeEvent.initialSession)) {
-        // 로그인 성공 -> 홈으로
-        navigatorKey.currentState?.pushReplacementNamed('/home')?.then((_) {
-           clearOAuthQueryFromUrl();
-        });
+        if (!_isNavigating) {
+          _navigateToHome();
+        }
       } else if (event == AuthChangeEvent.signedOut) {
-        // 로그아웃 -> 로그인 화면으로
+        _isNavigating = false;
         navigatorKey.currentState?.pushReplacementNamed('/login');
       }
+    });
+  }
+
+  void _navigateToHome() {
+    if (_isNavigating) return;
+    _isNavigating = true;
+
+    // URL 정리 (콜백 쿼리 파라미터 제거)
+    clearOAuthQueryFromUrl();
+
+    print('[$DateTime.now()] [Auth] Navigating to Home...');
+    navigatorKey.currentState?.pushReplacementNamed('/home')?.then((_) {
+      _isNavigating = false;
     });
   }
 

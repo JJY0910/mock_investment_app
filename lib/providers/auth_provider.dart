@@ -104,6 +104,7 @@ class AuthProvider extends ChangeNotifier {
     
     try {
       addLog('Calling signInWithKakao...');
+      print('[$DateTime.now()] [Auth] OAuth START');
       await _authService.signInWithKakao();
       addLog('signInWithKakao returned (Web flow might redirect)');
     } catch (e) {
