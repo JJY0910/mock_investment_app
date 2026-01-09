@@ -7,6 +7,24 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Phase 3-1: Required logging
+    print('LOGIN SCREEN RENDERED');
+    // URL logging removed (requires dart:html)
+    
+    // Phase 3-4: Show SnackBar when error is set
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (authProvider.error != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(authProvider.error!),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      });
+    }
+    
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -66,9 +84,13 @@ class LoginScreen extends StatelessWidget {
                     
                     return ElevatedButton(
                       onPressed: () async {
+                        print('[UI] Kakao button tapped');
+                        
+                        // Phase 3-3: Enable real OAuth flow
                         try {
                           await authProvider.signInWithKakao();
                         } catch (e) {
+                          print('[UI] Exception from authProvider.signInWithKakao: $e');
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('로그인 실패: $e'),
@@ -76,6 +98,8 @@ class LoginScreen extends StatelessWidget {
                             ),
                           );
                         }
+                        
+                        print('[UI] Kakao handler finished');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFFFFE812), // 카카오 노란색

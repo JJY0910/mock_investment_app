@@ -12,18 +12,29 @@ class AuthService {
   
   /// 카카오 로그인
   Future<bool> signInWithKakao() async {
+    print('[AuthService] signInWithKakao ENTER');
+    
     try {
-      final redirectUrl = Uri.base.origin;
-      print('[AuthService] Redirect URL: $redirectUrl');
+      // Phase 3-10: Use SDK's OAuth flow (SDK manages PKCE internally)
+      const redirectUrl = 'https://www.trader-lab.cloud';
       
+      print('[AuthService] ===== OAuth START =====');
+      print('[AuthService] Redirect URL (hardcoded): $redirectUrl');
+      print('[AuthService] Using SDK signInWithOAuth (SDK manages PKCE)...');
+      
+      // Let SDK handle PKCE generation, storage, and navigation
+      // Web platform: SDK uses window.location.assign automatically
       await _supabase.auth.signInWithOAuth(
         OAuthProvider.kakao,
         redirectTo: redirectUrl,
-        scopes: 'profile_nickname account_email',
       );
+      
+      print('[AuthService] signInWithOAuth completed (navigation should happen)');
+      print('[AuthService] signInWithKakao EXIT');
       return true;
-    } catch (e) {
-      print('[AuthService] Kakao login error: $e');
+    } catch (e, stackTrace) {
+      print('[AuthService] EXCEPTION in signInWithKakao: $e');
+      print('[AuthService] Stack trace: $stackTrace');
       return false;
     }
   }

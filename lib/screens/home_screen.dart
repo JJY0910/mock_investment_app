@@ -4,6 +4,7 @@ import 'package:mock_investment_app/services/price_service.dart';
 import '../providers/price_provider.dart';
 import '../widgets/responsive_layout.dart';
 import '../config/constants.dart';
+import '../features/home/widgets/chart_panel.dart';
 import 'package:intl/intl.dart';
 
 // 메인 대시보드 화면
@@ -35,6 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('[HomeScreen] HOME_SCREEN_BUILD');
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('모의 투자 트레이더'),
@@ -100,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 _buildBalanceCard(),
                 const SizedBox(height: 16),
-                Expanded(child: _buildChartPlaceholder()),
+                const Expanded(child: ChartPanel()),
               ],
             ),
           ),

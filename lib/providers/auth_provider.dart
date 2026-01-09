@@ -1,24 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 import '../services/auth_service.dart';
 
-// URL 쿼리 파라미터 제거나 (OAuth Code 등)
-void clearOAuthQueryFromUrl() {
-  final uri = Uri.base;
-  if (uri.queryParameters.containsKey('code') || 
-      uri.queryParameters.containsKey('error') ||
-      uri.queryParameters.containsKey('state')) {
-    
-    // 쿼리 파라미터가 제거된 깨끗한 URL 생성
-    final newUrl = uri.origin + uri.path;
-    print('[Auth] Clearing OAuth params. New URL: $newUrl');
-    
-    // 히스토리 교체 (리로드 없음)
-    html.window.history.replaceState(null, '', newUrl);
-  }
-}
+import 'url_helper_stub.dart'
+  if (dart.library.html) 'url_helper_web.dart';
+
+// URL cleanup is now handled by conditional import
+// Web: url_helper_web.dart (uses dart:html)
+// Non-web: url_helper_stub.dart (no-op)
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
@@ -55,7 +44,12 @@ class AuthProvider extends ChangeNotifier {
 
   void _init() {
     // 1. 초기 세션 확인
+    bool hasOAuthParams = false;
     try {
+      final uri = Uri.base;
+      hasOAuthParams = uri.queryParameters.containsKey('code') && 
+                       uri.queryParameters.containsKey('state');
+      
       final session = Supabase.instance.client.auth.currentSession;
       _currentUser = session?.user;
       addLog('Initial Session: ${_currentUser != null ? "Found (${_currentUser!.email})" : "None"}');
@@ -63,6 +57,20 @@ class AuthProvider extends ChangeNotifier {
       if (_currentUser != null) {
         // 이미 세션이 있으면 URL 정리 한 번 시도 (재진입 시)
         clearOAuthQueryFromUrl();
+      } else if (hasOAuthParams) {
+        // Phase 3-4: OAuth callback but no session yet - wait briefly for SDK to process
+        addLog('OAuth params detected, waiting for token exchange...');
+        Future.delayed(const Duration(seconds: 2), () {
+          final newSession = Supabase.instance.client.auth.currentSession;
+          if (newSession == null) {
+            // Token exchange failed (401)
+            print('AUTH_EXCHANGE_FAIL: 401 Unauthorized (or timeout)');
+            addLog('AUTH_EXCHANGE_FAIL: Token exchange failed');
+            _error = '로그인에 실패했습니다. 다시 시도해주세요.';
+            clearOAuthQueryFromUrl();
+            notifyListeners();
+          }
+        });
       }
     } catch (e) {
       addLog('Error checking initial session: $e');
@@ -70,28 +78,57 @@ class AuthProvider extends ChangeNotifier {
 
     // 2. Auth State 변경 리스너
     _authService.authStateChanges.listen((AuthState state) async {
+      print('[AuthProvider] ===== AUTH STATE CHANGE =====');
+      print('[AuthProvider] Event: ${state.event}');
       addLog('Auth Event: ${state.event}');
       
       final session = state.session;
+      final previousUser = _currentUser;
       _currentUser = session?.user;
+      
+      // Phase 3-9: Comprehensive session logging
+      print('[AuthProvider] Current User: ${_currentUser?.email ?? "None"}');
+      print('[AuthProvider] Session exists: ${session != null}');
+      if (session != null) {
+        print('[AuthProvider] Session.accessToken exists: ${session.accessToken.isNotEmpty}');
+        print('[AuthProvider] Session.user.id: ${session.user?.id}');
+      }
+      
+      // LocalStorage keys dump removed (requires dart:html)
+      
       addLog('Current User: ${_currentUser?.email ?? "None"}');
       
       if (state.event == AuthChangeEvent.signedIn || state.event == AuthChangeEvent.initialSession) {
+        print('[AuthProvider] SIGNED_IN detected!');
         addLog('Signed In / Initial Session detected');
-        // 여기서 URL 정리는 라우팅 직후에 하는게 더 안전할 수 있으나, 
-        // 상태 변경 시점에도 체크
+        
         if (_currentUser != null) {
-           // 프로필 생성 시도
-           try {
-             addLog('Upserting profile...');
-             await _authService.upsertUserProfile(_currentUser!);
-             addLog('Profile upserted.');
-           } catch(e) {
-             addLog('Profile upsert error: $e');
-           }
+          // Success! Clear any previous error
+          _error = null;
+          
+          // URL 정리 (성공 시)
+          print('[AuthProvider] Clearing OAuth query params from URL...');
+          clearOAuthQueryFromUrl();
+          
+          // 프로필 생성 시도
+          try {
+            addLog('Upserting profile...');
+            await _authService.upsertUserProfile(_currentUser!);
+            addLog('Profile upserted.');
+          } catch(e) {
+            addLog('Profile upsert error: $e');
+          }
         }
       } else if (state.event == AuthChangeEvent.signedOut) {
         addLog('User signed out.');
+        
+        // Phase 3-4: If signedOut event during OAuth callback, it indicates failure
+        if (hasOAuthParams && previousUser == null) {
+          print('AUTH_EXCHANGE_FAIL: SignedOut event during OAuth callback');
+          addLog('AUTH_EXCHANGE_FAIL: SignedOut during callback');
+          _error = '로그인에 실패했습니다. 다시 시도해주세요.';
+          clearOAuthQueryFromUrl();
+        }
       }
       
       notifyListeners();

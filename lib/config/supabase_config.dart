@@ -3,9 +3,8 @@ class SupabaseConfig {
   // Supabase 프로젝트 URL
   static const String supabaseUrl = 'https://jvepiawctkyyqttzhlgv.supabase.co';
   
-  // Supabase Anon Key (공개 키)
-  static const String supabaseAnonKey = 
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp2ZXBpYXdjdGt5eXF0dHpobGd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY1OTczNDYsImV4cCI6MjA1MjE3MzM0Nn0.sb_publishable_3z5wPmYDZRJOqTSFUVmIpA_s7SfYWs_';
+  // Supabase Publishable Key (Flutter Web에서는 publishable key 사용 필수)
+  static const String supabaseAnonKey = 'sb_publishable_3z5wPmYDZRJOqTSFUVmIpA_s7SfYWs_';
   
   // 초기화 완료 여부 플래그
   static bool _initialized = false;

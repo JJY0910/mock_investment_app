@@ -1,0 +1,12 @@
+194:           Error: Undefined name 'html'.
+198:           Error: Undefined name 'html'.
+202:           Error: Undefined name 'platformViewRegistry'.
+205:           Error: Compilation failed.
+239:           Error: Undefined 
+247:           Error: Undefined 
+257:           Error: Undefined 
+264:           Error: Compilatio
+424:[  +43 ms] Error: Failed to 
+234:iled: ProcessException: Proc
+154:[        ] Compiling lib\main.dart for the Web...
+422:[   +4 ms] Compiling lib\main.dart for the Web... (completed in 29.2s)

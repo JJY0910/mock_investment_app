@@ -36,7 +36,7 @@ class BinanceRestService {
             close: double.parse(k[4].toString()),
             volume: double.parse(k[5].toString()),
             closeTime: k[6],
-            isClosed: true, // REST 데이터는 모두 완료된 캔들
+            isFinal: true, // REST 데이터는 모두 완료된 캔들
           );
         }).toList();
       } else {

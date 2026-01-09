@@ -1,0 +1,503 @@
+﻿[ +224 ms] Unable to locate an Android SDK.
+[   +6 ms] Artifact Instance of 'MaterialFonts' is not required, skipping update.
+[        ] Artifact Instance of 'GradleWrapper' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[        ] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterSdk' is not required, skipping update.
+[        ] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FontSubsetArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'PubDependencies' is not required, skipping update.
+[        ] executing: [C:\flutter/] git -c log.showSignature=false log HEAD -n 1 --pretty=format:%ad --date=iso
+[  +40 ms] Exit code 0 from: git -c log.showSignature=false log HEAD -n 1 --pretty=format:%ad --date=iso
+[        ] 2025-12-11 11:50:07 -0500
+[   +9 ms] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterEngineStamp' is not required, skipping update.
+[        ] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[   +1 ms] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[  +34 ms] Artifact Instance of 'MaterialFonts' is not required, skipping update.
+[        ] Artifact Instance of 'GradleWrapper' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterEngineStamp' is not required, skipping update.
+[   +2 ms] Artifact Instance of 'FlutterSdk' is not required, skipping update.
+[        ] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FontSubsetArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'PubDependencies' is not required, skipping update.
+[  +10 ms] Skipping pub get: version match.
+[  +82 ms] Found plugin url_launcher at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher-6.3.2\
+[   +3 ms] Found plugin url_launcher_windows at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_windows-3.1.5\
+[   +3 ms] Found plugin url_launcher_web at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_web-2.4.1\
+[   +1 ms] Found plugin url_launcher_macos at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_macos-3.2.5\
+[   +1 ms] Found plugin url_launcher_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_linux-3.2.2\
+[   +1 ms] Found plugin url_launcher_ios at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_ios-6.3.6\
+[   +1 ms] Found plugin url_launcher_android at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_android-6.3.28\
+[  +16 ms] Found plugin shared_preferences at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.5.4\
+[   +1 ms] Found plugin shared_preferences_windows at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_windows-2.4.1\
+[   +2 ms] Found plugin path_provider_windows at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+[   +4 ms] Found plugin shared_preferences_web at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.3\
+[   +1 ms] Found plugin shared_preferences_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[   +1 ms] Found plugin path_provider_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +1 ms] Found plugin shared_preferences_foundation at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.6\
+[   +2 ms] Found plugin shared_preferences_android at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.4.18\
+[   +2 ms] Found plugin path_provider at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[   +1 ms] Found plugin path_provider_foundation at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.5.1\
+[   +1 ms] Found plugin path_provider_android at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.22\
+[        ] Found plugin app_links at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\app_links-6.4.1\
+[        ] Found plugin app_links_web at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\app_links_web-1.0.4\
+[   +2 ms] Found plugin app_links_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\app_links_linux-1.0.3\
+[   +1 ms] Found plugin gtk at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\gtk-2.1.0\
+[  +58 ms] Found plugin url_launcher at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher-6.3.2\
+[        ] Found plugin url_launcher_windows at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_windows-3.1.5\
+[   +1 ms] Found plugin url_launcher_web at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_web-2.4.1\
+[        ] Found plugin url_launcher_macos at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_macos-3.2.5\
+[   +1 ms] Found plugin url_launcher_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_linux-3.2.2\
+[   +1 ms] Found plugin url_launcher_ios at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_ios-6.3.6\
+[        ] Found plugin url_launcher_android at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_android-6.3.28\
+[   +7 ms] Found plugin shared_preferences at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.5.4\
+[        ] Found plugin shared_preferences_windows at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_windows-2.4.1\
+[        ] Found plugin path_provider_windows at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+[   +1 ms] Found plugin shared_preferences_web at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.3\
+[        ] Found plugin shared_preferences_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[        ] Found plugin path_provider_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[        ] Found plugin shared_preferences_foundation at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.6\
+[   +2 ms] Found plugin shared_preferences_android at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.4.18\
+[   +1 ms] Found plugin path_provider at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[        ] Found plugin path_provider_foundation at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.5.1\
+[        ] Found plugin path_provider_android at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.22\
+[        ] Found plugin app_links at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\app_links-6.4.1\
+[        ] Found plugin app_links_web at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\app_links_web-1.0.4\
+[        ] Found plugin app_links_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\app_links_linux-1.0.3\
+[        ] Found plugin gtk at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\gtk-2.1.0\
+[   +7 ms] Skipping generating web_plugin_registrant.dart because it is up-to-date.
+[  +35 ms] Found plugin url_launcher at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher-6.3.2\
+[   +1 ms] Found plugin url_launcher_windows at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_windows-3.1.5\
+[   +1 ms] Found plugin url_launcher_web at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_web-2.4.1\
+[   +1 ms] Found plugin url_launcher_macos at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_macos-3.2.5\
+[        ] Found plugin url_launcher_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_linux-3.2.2\
+[        ] Found plugin url_launcher_ios at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_ios-6.3.6\
+[        ] Found plugin url_launcher_android at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_android-6.3.28\
+[   +8 ms] Found plugin shared_preferences at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.5.4\
+[        ] Found plugin shared_preferences_windows at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_windows-2.4.1\
+[   +1 ms] Found plugin path_provider_windows at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+[   +2 ms] Found plugin shared_preferences_web at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.3\
+[        ] Found plugin shared_preferences_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[        ] Found plugin path_provider_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[        ] Found plugin shared_preferences_foundation at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.6\
+[        ] Found plugin shared_preferences_android at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.4.18\
+[        ] Found plugin path_provider at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[        ] Found plugin path_provider_foundation at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.5.1\
+[        ] Found plugin path_provider_android at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.22\
+[        ] Found plugin app_links at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\app_links-6.4.1\
+[        ] Found plugin app_links_web at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\app_links_web-1.0.4\
+[   +1 ms] Found plugin app_links_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\app_links_linux-1.0.3\
+[        ] Found plugin gtk at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\gtk-2.1.0\
+[  +74 ms] Found plugin url_launcher at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher-6.3.2\
+[        ] Found plugin url_launcher_windows at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_windows-3.1.5\
+[  +13 ms] Found plugin url_launcher_web at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_web-2.4.1\
+[   +2 ms] Found plugin url_launcher_macos at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_macos-3.2.5\
+[        ] Found plugin url_launcher_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_linux-3.2.2\
+[        ] Found plugin url_launcher_ios at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_ios-6.3.6\
+[        ] Found plugin url_launcher_android at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_android-6.3.28\
+[   +7 ms] Found plugin shared_preferences at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.5.4\
+[        ] Found plugin shared_preferences_windows at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_windows-2.4.1\
+[   +1 ms] Found plugin path_provider_windows at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+[   +2 ms] Found plugin shared_preferences_web at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.3\
+[        ] Found plugin shared_preferences_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[        ] Found plugin path_provider_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +1 ms] Found plugin shared_preferences_foundation at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.6\
+[        ] Found plugin shared_preferences_android at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.4.18\
+[        ] Found plugin path_provider at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[        ] Found plugin path_provider_foundation at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.5.1\
+[        ] Found plugin path_provider_android at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.22\
+[        ] Found plugin app_links at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\app_links-6.4.1\
+[        ] Found plugin app_links_web at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\app_links_web-1.0.4\
+[   +1 ms] Found plugin app_links_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\app_links_linux-1.0.3\
+[        ] Found plugin gtk at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\gtk-2.1.0\
+[   +3 ms] generated_plugin_registrant.dart not found. Skipping.
+[        ] Compiling lib\main.dart for the Web...
+[   +7 ms] Initializing file store
+[  +17 ms] invalidated build due to missing files: C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\web\*\index.html, C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\web\flutter_bootstrap.js
+[        ] web_entrypoint: Starting due to {InvalidatedReasonKind.outputSetAddition: The following outputs were added to the output set: C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\main.dart, InvalidatedReasonKind.inputChanged: The following inputs have updated contents: C:\flutter\packages\flutter_tools\lib\src\build_system\targets\web.dart}
+[        ] Skipping target: gen_localizations
+[   +1 ms] web_templated_files: Starting due to {InvalidatedReasonKind.buildKeyChanged: The target build key changed., InvalidatedReasonKind.outputSetAddition: The following outputs were added to the output set: C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\build\web\*\index.html,C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\build\web\flutter_bootstrap.js, InvalidatedReasonKind.inputMissing: The following inputs were missing: C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\web\*\index.html,C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\web\flutter_bootstrap.js, InvalidatedReasonKind.inputChanged: The following inputs have updated contents: C:\flutter\bin\cache\engine.stamp}
+[        ] dart_build: Starting due to {}
+[        ] web_static_assets: Starting due to {InvalidatedReasonKind.inputChanged: The following inputs have updated contents: C:\flutter\bin\cache\engine.stamp, InvalidatedReasonKind.outputSetAddition: The following outputs were added to the output set: C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\flutter.js,C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\canvaskit\canvaskit.js,C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\canvaskit\canvaskit.js.symbols,C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\canvaskit\canvaskit.wasm,C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\canvaskit\chromium\canvaskit.js,C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\canvaskit\chromium\canvaskit.js.symbols,C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\canvaskit\chromium\canvaskit.wasm,C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\canvaskit\skwasm.js,C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\canvaskit\skwasm.js.symbols,C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\canvaskit\skwasm.wasm,C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\canvaskit\skwasm_heavy.js,C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\canvaskit\skwasm_heavy.js.symbols,C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\canvaskit\skwasm_heavy.wasm}
+[  +51 ms] web_static_assets: Complete
+[  +38 ms] web_templated_files: Complete
+[  +14 ms] No packages with native assets. Skipping native assets compilation.
+[   +2 ms] dart_build: Complete
+[  +21 ms] Found plugin url_launcher at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher-6.3.2\
+[        ] Found plugin url_launcher_windows at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_windows-3.1.5\
+[   +1 ms] Found plugin url_launcher_web at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_web-2.4.1\
+[        ] Found plugin url_launcher_macos at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_macos-3.2.5\
+[        ] Found plugin url_launcher_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_linux-3.2.2\
+[        ] Found plugin url_launcher_ios at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_ios-6.3.6\
+[        ] Found plugin url_launcher_android at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_android-6.3.28\
+[   +9 ms] Found plugin shared_preferences at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.5.4\
+[        ] Found plugin shared_preferences_windows at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_windows-2.4.1\
+[   +1 ms] Found plugin path_provider_windows at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+[   +2 ms] Found plugin shared_preferences_web at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.3\
+[        ] Found plugin shared_preferences_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[        ] Found plugin path_provider_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +1 ms] Found plugin shared_preferences_foundation at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.6\
+[        ] Found plugin shared_preferences_android at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.4.18\
+[        ] Found plugin path_provider at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[   +5 ms] Found plugin path_provider_foundation at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.5.1\
+[        ] Found plugin path_provider_android at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.22\
+[   +1 ms] Found plugin app_links at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\app_links-6.4.1\
+[        ] Found plugin app_links_web at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\app_links_web-1.0.4\
+[   +1 ms] Found plugin app_links_linux at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\app_links_linux-1.0.3\
+[        ] Found plugin gtk at C:\Users\abcde\AppData\Local\Pub\Cache\hosted\pub.dev\gtk-2.1.0\
+[   +6 ms] web_entrypoint: Complete
+[   +1 ms] dart2js: Starting due to {}
+[   +3 ms] executing: C:\flutter\bin\cache\dart-sdk\bin\dart.exe compile js --platform-binaries=C:\flutter\bin\cache\flutter_web_sdk\kernel --invoker=flutter_tool -Ddart.vm.product=true -DFLUTTER_VERSION=3.38.5 -DFLUTTER_CHANNEL=stable -DFLUTTER_GIT_URL=https://github.com/flutter/flutter.git -DFLUTTER_FRAMEWORK_REVISION=f6ff1529fd -DFLUTTER_ENGINE_REVISION=1527ae0ec5 -DFLUTTER_DART_VERSION=3.10.4 -DFLUTTER_WEB_USE_SKIA=true -DFLUTTER_WEB_USE_SKWASM=false -DFLUTTER_WEB_CANVASKIT_URL=https://www.gstatic.com/flutter-canvaskit/1527ae0ec577a4ef50e65f6fefcfc1326707d9bf/ --native-null-assertions --no-source-maps -O4 --minify -o C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\app.dill --packages=C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\package_config.json --cfe-only C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\main.dart
+[        ] dart2wasm: Starting due to {}
+[        ] executing: C:\flutter\bin\cache\dart-sdk\bin\dart.exe compile wasm --packages=C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\package_config.json --extra-compiler-option=--platform=C:\flutter\bin\cache\flutter_web_sdk\kernel\dart2wasm_platform.dill -Ddart.vm.profile=false -Ddart.vm.product=true --extra-compiler-option=--delete-tostring-package-uri=dart:ui --extra-compiler-option=--delete-tostring-package-uri=package:flutter --extra-compiler-option=--import-shared-memory --extra-compiler-option=--shared-memory-max-pages=32768 -DFLUTTER_VERSION=3.38.5 -DFLUTTER_CHANNEL=stable -DFLUTTER_GIT_URL=https://github.com/flutter/flutter.git -DFLUTTER_FRAMEWORK_REVISION=f6ff1529fd -DFLUTTER_ENGINE_REVISION=1527ae0ec5 -DFLUTTER_DART_VERSION=3.10.4 -DFLUTTER_WEB_USE_SKIA=false -DFLUTTER_WEB_USE_SKWASM=true -DFLUTTER_WEB_CANVASKIT_URL=https://www.gstatic.com/flutter-canvaskit/1527ae0ec577a4ef50e65f6fefcfc1326707d9bf/ --extra-compiler-option=--depfile=C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\dart2wasm.d -O2 --strip-wasm --no-source-maps --minify --extra-compiler-option=--dry-run -o C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\main.dart.wasm C:\Users\abcde\.gemini\antigravity\scratch\mock_investment_app\.dart_tool\flutter_build\38d31961a0df8bf7e7bc338cf6909dd0\main.dart
+[+6385 ms] lib/main.dart:62:7:
+           Error: Undefined name 'html'.
+                 html.window.history.replaceState(null, '', cleanUrl);
+                 ^^^^
+           lib/main.dart:90:21:
+           Error: Undefined name 'html'.
+                               html.window.location.href = '/';
+                               ^^^^
+           lib/features/home/widgets/chart_panel_web.dart:52:10:
+           Error: Undefined name 'platformViewRegistry'.
+                 ui.platformViewRegistry.registerViewFactory(
+                    ^^^^^^^^^^^^^^^^^^^^
+           Error: Compilation failed.
+flutter : [+22641 ms] Wasm d
+ry run succeeded. Consider b
+uilding and testing your app
+lication with the `--wasm` f
+lag. See docs for more info:
+ https://docs.flutter.dev/pl
+atform-integration/web/wasm
+위치 줄:1 문자:1
++ flutter build web --releas
+e --verbose 2>&1 | Out-File 
+-FilePath build ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
+    + CategoryInfo          
+    : NotSpecified: ([+226  
+  41 ms] Was...ration/web   
+ /wasm:String) [], Remot    
+eException
+    + FullyQualifiedErrorId 
+    : NativeCommandError
+ 
+[        ] Use --no-wasm-dry
+-run to disable these warnin
+gs.
+[   +6 ms] dart2wasm: Complete
+[   +3 ms] Persisting file store
+[   +2 ms] Done persisting file store
+[   +2 ms] Target dart2js fa
+iled: ProcessException: Proc
+ess exited abnormally with e
+xit code 1:
+           lib/main.dart:62:
+7:
+           Error: Undefined 
+name 'html'.
+                 html.window
+.history.replaceState(null, 
+'', cleanUrl);
+                 ^^^^
+           lib/main.dart:90:
+21:
+           Error: Undefined 
+name 'html'.
+                            
+   html.window.location.href
+ = '/';
+                            
+   ^^^^
+           lib/features/home
+/widgets/chart_panel_web.dar
+t:52:10:
+           Error: Undefined 
+name 'platformViewRegistry'.
+                 ui.platform
+ViewRegistry.registerViewFac
+tory(
+                    ^^^^^^^^
+^^^^^^^^^^^^
+           Error: Compilatio
+n failed.
+             Command: C:\flu
+tter\bin\cache\dart-sdk\bin\
+dart.exe compile js --platfo
+rm-binaries=C:\flutter\bin\c
+ache\flutter_web_sdk\kernel 
+--invoker=flutter_tool -Ddar
+t.vm.product=true -DFLUTTER_
+VERSION=3.38.5 -DFLUTTER_CHA
+NNEL=stable -DFLUTTER_GIT_UR
+L=https://github.com/flutter
+/flutter.git -DFLUTTER_FRAME
+WORK_REVISION=f6ff1529fd -DF
+LUTTER_ENGINE_REVISION=1527a
+e0ec5 -DFLUTTER_DART_VERSION
+=3.10.4 -DFLUTTER_WEB_USE_SK
+IA=true -DFLUTTER_WEB_USE_SK
+WASM=false -DFLUTTER_WEB_CAN
+VASKIT_URL=https://www.gstat
+ic.com/flutter-canvaskit/152
+7ae0ec577a4ef50e65f6fefcfc13
+26707d9bf/ --native-null-ass
+ertions --no-source-maps -O4
+ --minify -o C:\Users\abcde\
+.gemini\antigravity\scratch\
+mock_investment_app\.dart_to
+ol\flutter_build\38d31961a0d
+f8bf7e7bc338cf6909dd0\app.di
+ll --packages=C:\Users\abcde
+\.gemini\antigravity\scratch
+\mock_investment_app\.dart_t
+ool\package_config.json --cf
+e-only C:\Users\abcde\.gemin
+i\antigravity\scratch\mock_i
+nvestment_app\.dart_tool\flu
+tter_build\38d31961a0df8bf7e
+7bc338cf6909dd0\main.dart
+           #0      RunResult
+.throwException (package:flu
+tter_tools/src/base/process.
+dart:153:5)
+           #1      _DefaultP
+rocessUtils.run (package:flu
+tter_tools/src/base/process.
+dart:379:19)
+           <asynchronous sus
+pension>
+           #2      Dart2JSTa
+rget.build (package:flutter_
+tools/src/build_system/targe
+ts/web.dart:207:5)
+           <asynchronous sus
+pension>
+           #3      _BuildIns
+tance._invokeInternal (packa
+ge:flutter_tools/src/build_s
+ystem/build_system.dart:895:
+9)
+           <asynchronous sus
+pension>
+           #4      Future.wa
+it.<anonymous closure> (dart
+:async/future.dart:546:21)
+           <asynchronous sus
+pension>
+           #5      _BuildIns
+tance.invokeTarget (package:
+flutter_tools/src/build_syst
+em/build_system.dart:833:32)
+           <asynchronous sus
+pension>
+           #6      Future.wa
+it.<anonymous closure> (dart
+:async/future.dart:546:21)
+           <asynchronous sus
+pension>
+           #7      _BuildIns
+tance.invokeTarget (package:
+flutter_tools/src/build_syst
+em/build_system.dart:833:32)
+           <asynchronous sus
+pension>
+           #8      FlutterBu
+ildSystem.build (package:flu
+tter_tools/src/build_system/
+build_system.dart:653:16)
+           <asynchronous sus
+pension>
+           #9      WebBuilde
+r.buildWeb (package:flutter_
+tools/src/web/compile.dart:9
+4:34)
+           <asynchronous sus
+pension>
+           #10     BuildWebC
+ommand.runCommand (package:f
+lutter_tools/src/commands/bu
+ild_web.dart:296:5)
+           <asynchronous sus
+pension>
+           #11     FlutterCo
+mmand.run.<anonymous closure
+> (package:flutter_tools/src
+/runner/flutter_command.dart
+:1559:27)
+           <asynchronous sus
+pension>
+           #12     AppContex
+t.run.<anonymous closure> (p
+ackage:flutter_tools/src/bas
+e/context.dart:154:19)
+           <asynchronous sus
+pension>
+           #13     CommandRu
+nner.runCommand (package:arg
+s/command_runner.dart:212:13
+)
+           <asynchronous sus
+pension>
+           #14     FlutterCo
+mmandRunner.runCommand.<anon
+ymous closure> (package:flut
+ter_tools/src/runner/flutter
+_command_runner.dart:487:9)
+           <asynchronous sus
+pension>
+           #15     AppContex
+t.run.<anonymous closure> (p
+ackage:flutter_tools/src/bas
+e/context.dart:154:19)
+           <asynchronous sus
+pension>
+           #16     FlutterCo
+mmandRunner.runCommand (pack
+age:flutter_tools/src/runner
+/flutter_command_runner.dart
+:422:5)
+           <asynchronous sus
+pension>
+           #17     run.<anon
+ymous closure>.<anonymous cl
+osure> (package:flutter_tool
+s/runner.dart:104:11)
+           <asynchronous sus
+pension>
+           #18     AppContex
+t.run.<anonymous closure> (p
+ackage:flutter_tools/src/bas
+e/context.dart:154:19)
+           <asynchronous sus
+pension>
+           #19     main (pac
+kage:flutter_tools/executabl
+e.dart:103:3)
+           <asynchronous sus
+pension>
+
+[   +4 ms] Compiling lib\main.dart for the Web... (completed in 29.2s)
+[        ] "flutter web" took 29,719ms.
+[  +43 ms] Error: Failed to 
+compile application for the 
+Web.
+[        ] 
+           #0      throwTool
+Exit (package:flutter_tools/
+src/base/common.dart:34:3)
+           #1      WebBuilde
+r.buildWeb (package:flutter_
+tools/src/web/compile.dart:1
+37:7)
+           <asynchronous sus
+pension>
+           #2      BuildWebC
+ommand.runCommand (package:f
+lutter_tools/src/commands/bu
+ild_web.dart:296:5)
+           <asynchronous sus
+pension>
+           #3      FlutterCo
+mmand.run.<anonymous closure
+> (package:flutter_tools/src
+/runner/flutter_command.dart
+:1559:27)
+           <asynchronous sus
+pension>
+           #4      AppContex
+t.run.<anonymous closure> (p
+ackage:flutter_tools/src/bas
+e/context.dart:154:19)
+           <asynchronous sus
+pension>
+           #5      CommandRu
+nner.runCommand (package:arg
+s/command_runner.dart:212:13
+)
+           <asynchronous sus
+pension>
+           #6      FlutterCo
+mmandRunner.runCommand.<anon
+ymous closure> (package:flut
+ter_tools/src/runner/flutter
+_command_runner.dart:487:9)
+           <asynchronous sus
+pension>
+           #7      AppContex
+t.run.<anonymous closure> (p
+ackage:flutter_tools/src/bas
+e/context.dart:154:19)
+           <asynchronous sus
+pension>
+           #8      FlutterCo
+mmandRunner.runCommand (pack
+age:flutter_tools/src/runner
+/flutter_command_runner.dart
+:422:5)
+           <asynchronous sus
+pension>
+           #9      run.<anon
+ymous closure>.<anonymous cl
+osure> (package:flutter_tool
+s/runner.dart:104:11)
+           <asynchronous sus
+pension>
+           #10     AppContex
+t.run.<anonymous closure> (p
+ackage:flutter_tools/src/bas
+e/context.dart:154:19)
+           <asynchronous sus
+pension>
+           #11     main (pac
+kage:flutter_tools/executabl
+e.dart:103:3)
+           <asynchronous sus
+pension>
+
+
+[        ] Running 1 shutdown hook
+[   +1 ms] Shutdown hooks complete
+[ +178 ms] exiting with code 1

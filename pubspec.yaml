@@ -31,6 +31,9 @@ dependencies:
   # 로컬 스토리지 (사용자 인증 정보 저장)
   shared_preferences: ^2.2.2
 
+  # URL Launcher (for LaunchMode)
+  url_launcher: ^6.2.0
+
   # JSON 직렬화
   json_annotation: ^4.8.1
   web_socket_channel: ^3.0.3
