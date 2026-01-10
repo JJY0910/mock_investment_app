@@ -5,9 +5,13 @@ import 'package:provider/provider.dart';
 
 import 'config/supabase_config.dart';
 import 'providers/auth_provider.dart';
-import 'providers/price_provider.dart'; // Add PriceProvider import
+import 'providers/price_provider.dart';
+import 'providers/theme_provider.dart'; // Theme provider
+import 'theme/app_theme.dart'; // Theme definitions
 import 'screens/login_screen.dart';
-import 'screens/home_screen.dart';
+import 'screens/home_hub_screen.dart';
+import 'screens/trade_screen.dart';
+import 'screens/rank_screen.dart';
 
 // Import conditional url_helper for web-specific operations
 import 'providers/url_helper_stub.dart'
@@ -112,52 +116,94 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()), // Theme provider FIRST
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => PriceProvider()),
       ],
-      child: MaterialApp(
-        title: 'Trader Lab',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-          useMaterial3: true,
-        ),
-        // Phase 3-3: Use AuthGate to handle session-based routing
-        home: const AuthGate(),
-        routes: {
-          '/login': (context) => const LoginScreen(),
-          '/home': (context) => const HomeScreen(),
-        },
-      ),
+      child: const ThemeGate(), // Use ThemeGate to load theme before MaterialApp
     );
   }
 }
 
-// AuthGate: Determines initial screen based on session
-class AuthGate extends StatefulWidget {
-  const AuthGate({Key? key}) : super(key: key);
+// ThemeGate: Load theme before rendering MaterialApp
+class ThemeGate extends StatelessWidget {
+  const ThemeGate({Key? key}) : super(key: key);
 
   @override
-  State<AuthGate> createState() => _AuthGateState();
+  Widget build(BuildContext context) {
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, _) {
+        // Show loading screen until theme is loaded
+        if (!themeProvider.isLoaded) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: Scaffold(
+              backgroundColor: const Color(0xFFF9FAFB), // Light scaffold color
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 40,
+                      height: 40,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Colors.blue,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Trader Lab',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF111827),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        // Theme loaded, show main app
+        return MaterialApp(
+          title: 'Trader Lab',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: themeProvider.mode,
+          // Phase 3-3: Use AuthGate to handle session-based routing
+          home: const AuthGate(),
+          routes: {
+            '/login': (context) => const LoginScreen(),
+            '/home': (context) => const HomeHubScreen(),
+            '/trade': (context) => const TradeScreen(),
+            '/rank': (context) => const RankScreen(),
+          },
+        );
+      },
+    );
+  }
 }
 
-class _AuthGateState extends State<AuthGate> {
-  bool _hasNavigated = false;
+// Phase 3-3: AuthGate separates routing based on session
+class AuthGate extends StatelessWidget {
+  const AuthGate({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, _) {
-        print('AUTH_GATE: isAuthenticated=${authProvider.isAuthenticated}');
+        final session = authProvider.session;
         
-        // Phase 3-10: Navigation guard - only navigate once when authenticated
-        if (authProvider.isAuthenticated && !_hasNavigated) {
-          print('NAVIGATE_HOME: User is authenticated');
+        if (session != null) {
+          // Phase 3-3: Logged in → Go to Home Hub
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted && !_hasNavigated) {
-              _hasNavigated = true;
-              Navigator.of(context).pushReplacementNamed('/home');
-            }
+            Navigator.pushReplacementNamed(context, '/home');
           });
         }
         

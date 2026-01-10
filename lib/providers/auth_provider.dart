@@ -27,6 +27,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   User? get currentUser => _currentUser;
+  Session? get session => Supabase.instance.client.auth.currentSession;
   bool get isLoading => _isLoading;
   bool get isAuthenticated => _currentUser != null;
   String? get error => _error;

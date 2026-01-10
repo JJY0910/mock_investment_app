@@ -7,15 +7,15 @@ import '../features/home/widgets/compact_balance_card.dart';
 import '../features/home/widgets/order_panel.dart';
 import '../features/home/widgets/bottom_tabs.dart';
 
-/// Trading Platform Style Home Screen
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+/// Trading Platform Screen with Chart, Orders, and Balance
+class TradeScreen extends StatefulWidget {
+  const TradeScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<TradeScreen> createState() => _TradeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _TradeScreenState extends State<TradeScreen> {
   String _selectedSymbol = 'BTCUSDT';
 
   @override
@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isDesktop = constraints.maxWidth >= 1024;
@@ -175,46 +175,57 @@ class _HomeScreenState extends State<HomeScreen> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.trending_up, size: 20, color: Colors.blue),
-                const SizedBox(width: 8),
-                const Text(
-                  '내 순위',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+      child: InkWell(
+        onTap: () => Navigator.pushNamed(context, '/rank'),
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.trending_up, size: 20, color: Colors.blue),
+                  const SizedBox(width: 8),
+                  Text(
+                    '내 순위',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '상위',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey[600],
+                  const Spacer(),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                    color: Theme.of(context).textTheme.bodySmall?.color,
                   ),
-                ),
-                const Text(
-                  '50%',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '상위',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Theme.of(context).textTheme.bodySmall?.color,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  const Text(
+                    '50%',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../services/price_service.dart';
 import '../config/constants.dart';
@@ -15,10 +16,39 @@ class PriceProvider with ChangeNotifier {
   // 에러 메시지
   String? _errorMessage;
 
+  // Periodic update control
+  StreamSubscription? _periodicSubscription;
+  bool _isPeriodicUpdateActive = false;
+
   // Getters
   Map<String, AssetPrice> get prices => _prices;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
+
+  // Balance getters (mock data for now)
+  double get totalAssets => 10000.0;
+  double get cash => 5000.0;
+  double get estimatedValue {
+    // Calculate total value of crypto holdings
+    double total = 0.0;
+    _prices.forEach((symbol, assetPrice) {
+      // Mock: assume 0.1 BTC, 1 ETH, 1000 XRP
+      if (symbol == 'BTCUSDT') total += 0.1 * assetPrice.price;
+      if (symbol == 'ETHUSDT') total += 1.0 * assetPrice.price;
+      if (symbol == 'XRPUSDT') total += 1000.0 * assetPrice.price;
+    });
+    return total;
+  }
+
+  // Get price for symbol
+  double? getPrice(String symbol) {
+    return _prices[symbol]?.price;
+  }
+
+  // Get 24h change for symbol
+  double? get24hChange(String symbol) {
+    return _prices[symbol]?.change;
+  }
 
   // 특정 심볼의 가격 조회
   AssetPrice? getPriceBySymbol(String symbol) {
@@ -58,16 +88,42 @@ class PriceProvider with ChangeNotifier {
     }
   }
 
-  // 주기적 시세 업데이트 시작
+  // 주기적 시세 업데이트 시작 (중복 방지)
   void startPeriodicUpdate(Map<String, String> symbolsWithTypes) {
+    print('[PriceProvider] startPeriodicUpdate called, active=$_isPeriodicUpdateActive');
+    
+    // 이미 실행 중이면 중복 시작 방지
+    if (_isPeriodicUpdateActive) {
+      print('[PriceProvider] Periodic update already active, skipping');
+      return;
+    }
+
+    _isPeriodicUpdateActive = true;
+    
     // 즉시 한 번 업데이트
+    print('[PriceProvider] Initial updatePrices');
     updatePrices(symbolsWithTypes);
     
     // 주기적으로 업데이트 (10초마다)
-    Stream.periodic(
+    _periodicSubscription = Stream.periodic(
       const Duration(seconds: AppConstants.priceUpdateIntervalSeconds),
     ).listen((_) {
+      print('[PriceProvider] tick updatePrices');
       updatePrices(symbolsWithTypes);
     });
+  }
+
+  // 주기적 업데이트 중지
+  void stopPeriodicUpdate() {
+    print('[PriceProvider] stopPeriodicUpdate called');
+    _periodicSubscription?.cancel();
+    _periodicSubscription = null;
+    _isPeriodicUpdateActive = false;
+  }
+
+  @override
+  void dispose() {
+    stopPeriodicUpdate();
+    super.dispose();
   }
 }

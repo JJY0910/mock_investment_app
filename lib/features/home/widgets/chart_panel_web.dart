@@ -40,8 +40,9 @@ class _ChartPanelState extends State<ChartPanel> {
   @override
   void initState() {
     super.initState();
-    // Generate unique viewType with timestamp to avoid conflicts
+    // Generate TRULY unique viewType with microseconds to avoid Hot Restart conflicts
     _viewType = 'trading-chart-${DateTime.now().microsecondsSinceEpoch}';
+    print('[ChartPanel] init viewType=$_viewType');
     _registerViewFactory();
   }
 
@@ -64,6 +65,13 @@ class _ChartPanelState extends State<ChartPanel> {
       print('[ChartPanel] View factory registered: $_viewType');
     } catch (e) {
       print('[ChartPanel] Error registering view factory: $e');
+      // Try to clean up any existing registration
+      try {
+        final existingDiv = html.document.getElementById(_viewType);
+        existingDiv?.remove();
+      } catch (cleanupError) {
+        print('[ChartPanel] Cleanup error: $cleanupError');
+      }
     }
   }
 
