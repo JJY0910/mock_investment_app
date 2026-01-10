@@ -1,8 +1,5 @@
 {
-    "buildCommand": "flutter build web --release",
     "outputDirectory": "build/web",
-    "installCommand": "if [ ! -d \"$HOME/flutter\" ]; then git clone https://github.com/flutter/flutter.git -b stable --depth 1 $HOME/flutter; fi && export PATH=\"$PATH:$HOME/flutter/bin\" && flutter doctor && flutter pub get",
-    "framework": null,
     "rewrites": [
         {
             "source": "/(.*)",
