@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:provider/provider.dart';
 
 import 'config/supabase_config.dart';
 import 'providers/auth_provider.dart';
 import 'providers/price_provider.dart';
 import 'providers/theme_provider.dart'; // Theme provider
+import 'providers/favorites_provider.dart'; // Favorites provider
+import 'providers/market_quotes_provider.dart'; // Market quotes provider
+import 'providers/exchange_rate_provider.dart'; // Exchange rate provider
+import 'providers/portfolio_provider.dart'; // Portfolio provider
+import 'providers/selected_coin_provider.dart'; // Selected coin provider
+import 'providers/orders_provider.dart'; // Orders provider
+import 'providers/trade_history_provider.dart'; // Trade history provider
+import 'providers/trader_score_provider.dart'; // Trader score provider (PHASE 2-1)
+import 'providers/user_provider.dart'; // User provider (PHASE 2-2)
+import 'providers/subscription_provider.dart'; // PHASE 3
 import 'theme/app_theme.dart'; // Theme definitions
 import 'screens/login_screen.dart';
 import 'screens/home_hub_screen.dart';
+import 'screens/history_screen.dart';
 import 'screens/trade_screen.dart';
+import 'screens/wallet_screen.dart'; // Wallet screen
 import 'screens/rank_screen.dart';
+import 'screens/nickname_screen.dart'; // PHASE 2-2: Nickname onboarding
+import 'screens/pricing_screen.dart'; // PHASE 3: Pricing screen
 
 // Import conditional url_helper for web-specific operations
 import 'providers/url_helper_stub.dart'
@@ -119,6 +132,16 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ThemeProvider()), // Theme provider FIRST
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => PriceProvider()),
+        ChangeNotifierProvider(create: (_) => FavoritesProvider()..load()), // Load favorites on init
+        ChangeNotifierProvider(create: (_) => MarketQuotesProvider()), // Market quotes provider
+        ChangeNotifierProvider(create: (_) => ExchangeRateProvider()..loadOnce()), // Load exchange rate on init
+        ChangeNotifierProvider(create: (_) => PortfolioProvider()..load()), // Load portfolio on init
+        ChangeNotifierProvider(create: (_) => SelectedCoinProvider()..initialize()), // Selected coin provider
+        ChangeNotifierProvider(create: (_) => OrdersProvider()..load()), // Orders provider
+        ChangeNotifierProvider(create: (_) => TradeHistoryProvider()..load()), // Trade history provider
+        ChangeNotifierProvider(create: (_) => TraderScoreProvider()..load()), // PHASE 2-1: Trader score provider
+        ChangeNotifierProvider(create: (_) => UserProvider()..load()), // PHASE 2-2: User provider
+        ChangeNotifierProvider(create: (_) => SubscriptionProvider()..load()), // PHASE 3: Subscription
       ],
       child: const ThemeGate(), // Use ThemeGate to load theme before MaterialApp
     );
@@ -180,9 +203,13 @@ class ThemeGate extends StatelessWidget {
           home: const AuthGate(),
           routes: {
             '/login': (context) => const LoginScreen(),
-            '/home': (context) => const HomeHubScreen(),
-            '/trade': (context) => const TradeScreen(),
-            '/rank': (context) => const RankScreen(),
+            '/home': (context) => const OnboardingGate(child: HomeHubScreen()),
+            '/trade': (context) => const OnboardingGate(child: TradeScreen()),
+            '/wallet': (context) => const OnboardingGate(child: WalletScreen()),
+            '/rank': (context) => const OnboardingGate(child: RankScreen()),
+            '/history': (context) => const OnboardingGate(child: HistoryScreen()),
+            '/nickname': (context) => const NicknameScreen(),
+            '/pricing': (context) => const PricingScreen(), // PHASE 3
           },
         );
       },
@@ -215,3 +242,36 @@ class AuthGate extends StatelessWidget {
 }
 
 
+
+// PHASE 2-2: OnboardingGate - 닉네임 미설정 시 강제 이동
+class OnboardingGate extends StatefulWidget {
+  final Widget child;
+  
+  const OnboardingGate({Key? key, required this.child}) : super(key: key);
+  
+  @override
+  State<OnboardingGate> createState() => _OnboardingGateState();
+}
+
+class _OnboardingGateState extends State<OnboardingGate> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkNickname();
+    });
+  }
+  
+  void _checkNickname() {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    
+    if (userProvider.needsNickname) {
+      Navigator.pushReplacementNamed(context, '/nickname');
+    }
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
+  }
+}

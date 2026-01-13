@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/price_provider.dart';
+import '../providers/selected_coin_provider.dart';
 import '../features/home/widgets/chart_panel.dart';
-import '../features/home/widgets/trading_top_bar.dart';
+import '../features/trade/widgets/market_summary_bar.dart';
 import '../features/home/widgets/compact_balance_card.dart';
 import '../features/home/widgets/order_panel.dart';
 import '../features/home/widgets/bottom_tabs.dart';
@@ -16,8 +17,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String _selectedSymbol = 'BTCUSDT';
-
   @override
   void initState() {
     super.initState();
@@ -30,12 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
         'XRPUSDT': 'crypto',
       });
     });
-  }
-
-  void _onSymbolChanged(String? symbol) {
-    if (symbol != null) {
-      setState(() => _selectedSymbol = symbol);
-    }
   }
 
   @override
@@ -66,11 +59,8 @@ class _HomeScreenState extends State<HomeScreen> {
           flex: 7,
           child: Column(
             children: [
-              // Top Bar
-              TradingTopBar(
-                selectedSymbol: _selectedSymbol,
-                onSymbolChanged: _onSymbolChanged,
-              ),
+              // Top Bar (MarketSummaryBar replaces TradingTopBar)
+              const MarketSummaryBar(),
 
               // Chart Panel
               const Expanded(
@@ -100,8 +90,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 const CompactBalanceCard(),
                 const SizedBox(height: 16),
 
-                // Order Panel
-                const OrderPanel(),
+                // Order Panel (Using Provider, no need to pass coin explicitly if it uses Provider internally, 
+                // BUT OrderPanel constructor takes selectedCoin. We should pass it or refactor OrderPanel to use Provider strictly.
+                // OrderPanel ALREADY uses Provider internally? Let's check OrderPanel definition again.
+                // It takes `this.selectedCoin` in constructor. 
+                // Ideally it should just listen to provider.
+                // For now, I'll pass it from the Consumer above.)
+                Consumer<SelectedCoinProvider>(
+                  builder: (context, provider, _) => const OrderPanel(),
+                ),
                 const SizedBox(height: 16),
 
                 // Ranking Card (축소)
@@ -120,10 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         children: [
           // Top Bar
-          TradingTopBar(
-            selectedSymbol: _selectedSymbol,
-            onSymbolChanged: _onSymbolChanged,
-          ),
+          const MarketSummaryBar(),
 
           // Chart Panel
           const SizedBox(
@@ -143,10 +137,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
               initiallyExpanded: false,
-              children: const [
+              children: [
                 Padding(
-                  padding: EdgeInsets.only(bottom: 16),
-                  child: OrderPanel(),
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Consumer<SelectedCoinProvider>(
+                    builder: (context, provider, _) => const OrderPanel(),
+                  ),
                 ),
               ],
             ),

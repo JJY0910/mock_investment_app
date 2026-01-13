@@ -1,0 +1,52 @@
+﻿Analyzing mock_investment_app...                                
+
+  error - Expected to find ')' - lib\features\home\widgets\order_panel.dart:145:15 - expected_token
+  error - Expected to find ';' - lib\features\home\widgets\order_panel.dart:147:11 - expected_token
+warning - Dead code - lib\features\home\widgets\order_panel.dart:147:12 - dead_code
+  error - Expected an identifier - lib\features\home\widgets\order_panel.dart:147:12 - missing_identifier
+  error - Unexpected text ';' - lib\features\home\widgets\order_panel.dart:147:12 - unexpected_token
+  error - Expected to find ';' - lib\features\home\widgets\order_panel.dart:149:36 - expected_token
+  error - Expected an identifier - lib\features\home\widgets\order_panel.dart:149:37 - missing_identifier
+  error - Unexpected text ';' - lib\features\home\widgets\order_panel.dart:149:37 - unexpected_token
+  error - The getter 'krwBalance' isn't defined for the type 'PortfolioProvider' - lib\features\home\widgets\order_panel.dart:167:65 - undefined_getter
+  error - The method 'getQuantity' isn't defined for the type 'PortfolioProvider' - lib\features\home\widgets\order_panel.dart:168:70 - undefined_method
+  error - Expected to find ';' - lib\features\home\widgets\order_panel.dart:175:11 - expected_token
+  error - Expected an identifier - lib\features\home\widgets\order_panel.dart:175:12 - missing_identifier
+  error - Unexpected text ';' - lib\features\home\widgets\order_panel.dart:175:12 - unexpected_token
+  error - Expected to find ';' - lib\features\home\widgets\order_panel.dart:176:36 - expected_token
+  error - Expected an identifier - lib\features\home\widgets\order_panel.dart:176:37 - missing_identifier
+  error - Unexpected text ';' - lib\features\home\widgets\order_panel.dart:176:37 - unexpected_token
+  error - Expected to find ';' - lib\features\home\widgets\order_panel.dart:196:13 - expected_token
+  error - Expected to find ';' - lib\features\home\widgets\order_panel.dart:209:13 - expected_token
+  error - Expected an identifier - lib\features\home\widgets\order_panel.dart:209:14 - missing_identifier
+  error - Unexpected text ';' - lib\features\home\widgets\order_panel.dart:209:14 - unexpected_token
+  error - Expected to find ';' - lib\features\home\widgets\order_panel.dart:211:36 - expected_token
+  error - Expected an identifier - lib\features\home\widgets\order_panel.dart:211:37 - missing_identifier
+  error - Unexpected text ';' - lib\features\home\widgets\order_panel.dart:211:37 - unexpected_token
+  error - Expected to find ';' - lib\features\home\widgets\order_panel.dart:226:11 - expected_token
+  error - Expected an identifier - lib\features\home\widgets\order_panel.dart:226:12 - missing_identifier
+  error - Unexpected text ';' - lib\features\home\widgets\order_panel.dart:226:12 - unexpected_token
+  error - Expected to find ';' - lib\features\home\widgets\order_panel.dart:228:36 - expected_token
+  error - Expected an identifier - lib\features\home\widgets\order_panel.dart:228:37 - missing_identifier
+  error - Unexpected text ';' - lib\features\home\widgets\order_panel.dart:228:37 - unexpected_token
+  error - Expected to find ';' - lib\features\home\widgets\order_panel.dart:260:11 - expected_token
+  error - Expected an identifier - lib\features\home\widgets\order_panel.dart:260:12 - missing_identifier
+  error - Expected to find ';' - lib\features\home\widgets\order_panel.dart:260:12 - expected_token
+  error - Unexpected text ';' - lib\features\home\widgets\order_panel.dart:260:12 - unexpected_token
+  error - Expected an identifier - lib\features\home\widgets\order_panel.dart:261:9 - missing_identifier
+  error - Expected to find ';' - lib\features\home\widgets\order_panel.dart:261:9 - expected_token
+  error - Unexpected text ';' - lib\features\home\widgets\order_panel.dart:261:9 - unexpected_token
+  error - Expected an identifier - lib\features\home\widgets\order_panel.dart:261:10 - missing_identifier
+  error - Expected to find ';' - lib\features\home\widgets\order_panel.dart:261:10 - expected_token
+  error - Unexpected text ';' - lib\features\home\widgets\order_panel.dart:261:10 - unexpected_token
+  error - Expected an identifier - lib\features\home\widgets\order_panel.dart:262:7 - missing_identifier
+  error - Expected to find ';' - lib\features\home\widgets\order_panel.dart:262:7 - expected_token
+  error - Unexpected text ';' - lib\features\home\widgets\order_panel.dart:262:7 - unexpected_token
+  error - Expected an identifier - lib\features\home\widgets\order_panel.dart:262:8 - missing_identifier
+  error - Expected to find ';' - lib\features\home\widgets\order_panel.dart:262:8 - expected_token
+  error - Unexpected text ';' - lib\features\home\widgets\order_panel.dart:262:8 - unexpected_token
+  error - Expected an identifier - lib\features\home\widgets\order_panel.dart:263:5 - missing_identifier
+  error - Unexpected text ';' - lib\features\home\widgets\order_panel.dart:263:5 - unexpected_token
+  error - The getter 'krwBalance' isn't defined for the type 'PortfolioProvider' - lib\features\home\widgets\order_panel.dart:348:69 - undefined_getter
+  error - The method 'getQuantity' isn't defined for the type 'PortfolioProvider' - lib\features\home\widgets\order_panel.dart:349:74 - undefined_method
+

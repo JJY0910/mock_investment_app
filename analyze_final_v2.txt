@@ -1,0 +1,16 @@
+﻿Analyzing order_panel.dart...                                   
+
+warning - The value of the field '_isProcessing' isn't used - lib\features\home\widgets\order_panel.dart:27:8 - unused_field
+warning - The value of the local variable 'activeColor' isn't used - lib\features\home\widgets\order_panel.dart:87:11 - unused_local_variable
+  error - Expected to find ']' - lib\features\home\widgets\order_panel.dart:146:11 - expected_token
+  error - Expected an identifier - lib\features\home\widgets\order_panel.dart:181:11 - missing_identifier
+  error - Expected to find ')' - lib\features\home\widgets\order_panel.dart:181:11 - expected_token
+  error - Expected to find ';' - lib\features\home\widgets\order_panel.dart:264:7 - expected_token
+warning - Dead code - lib\features\home\widgets\order_panel.dart:264:8 - dead_code
+  error - Expected an identifier - lib\features\home\widgets\order_panel.dart:264:8 - missing_identifier
+  error - Expected to find ';' - lib\features\home\widgets\order_panel.dart:264:8 - expected_token
+  error - Unexpected text ';' - lib\features\home\widgets\order_panel.dart:264:8 - unexpected_token
+  error - Expected an identifier - lib\features\home\widgets\order_panel.dart:265:5 - missing_identifier
+  error - Unexpected text ';' - lib\features\home\widgets\order_panel.dart:265:5 - unexpected_token
+warning - The declaration '_handleMarketOrder' isn't referenced - lib\features\home\widgets\order_panel.dart:497:16 - unused_element
+

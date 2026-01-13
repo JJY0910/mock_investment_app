@@ -1,0 +1,48 @@
+﻿Analyzing mock_investment_app...                                
+
+   info - 'dart:html' is deprecated and shouldn't be used. Use package:web and dart:js_interop instead - lib\features\home\widgets\chart_panel_web.dart:3:1 - deprecated_member_use
+  error - The name 'window' is being referenced through the prefix 'js_bridge', but it isn't defined in any of the libraries imported using that prefix - lib\features\home\widgets\chart_panel_web.dart:123:19 - undefined_prefixed_name
+  error - The name 'window' is being referenced through the prefix 'js_bridge', but it isn't defined in any of the libraries imported using that prefix - lib\features\home\widgets\chart_panel_web.dart:144:46 - undefined_prefixed_name
+  error - The name 'window' is being referenced through the prefix 'js_bridge', but it isn't defined in any of the libraries imported using that prefix - lib\features\home\widgets\chart_panel_web.dart:145:46 - undefined_prefixed_name
+  error - The name 'window' is being referenced through the prefix 'js_bridge', but it isn't defined in any of the libraries imported using that prefix - lib\features\home\widgets\chart_panel_web.dart:146:46 - undefined_prefixed_name
+  error - The name 'window' is being referenced through the prefix 'js_bridge', but it isn't defined in any of the libraries imported using that prefix - lib\features\home\widgets\chart_panel_web.dart:182:21 - undefined_prefixed_name
+  error - The name 'window' is being referenced through the prefix 'js_bridge', but it isn't defined in any of the libraries imported using that prefix - lib\features\home\widgets\chart_panel_web.dart:200:25 - undefined_prefixed_name
+  error - The name 'window' is being referenced through the prefix 'js_bridge', but it isn't defined in any of the libraries imported using that prefix - lib\features\home\widgets\chart_panel_web.dart:249:21 - undefined_prefixed_name
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\home\widgets\trading_top_bar.dart:222:39 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\home\widgets\trading_top_bar.dart:223:39 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\trade\widgets\market_summary_bar.dart:99:37 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\trade\widgets\market_summary_bar.dart:168:30 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\trade\widgets\market_summary_bar.dart:219:39 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\trade\widgets\market_summary_bar.dart:220:39 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\trade\widgets\market_summary_bar.dart:241:28 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\trade\widgets\market_summary_bar.dart:242:47 - deprecated_member_use
+   info - 'dart:html' is deprecated and shouldn't be used. Use package:web and dart:js_interop instead - lib\providers\url_helper_web.dart:2:1 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\home_hub_screen.dart:117:36 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\rank_screen.dart:111:37 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\rank_screen.dart:187:34 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\rank_screen.dart:231:48 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\theme\app_theme.dart:67:48 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\theme\app_theme.dart:160:47 - deprecated_member_use
+   info - 'dart:html' is deprecated and shouldn't be used. Use package:web and dart:js_interop instead - lib\web\js_bridge_web.dart:4:1 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - test_color_api.dart:6:30 - deprecated_member_use
+
+flutter : 25 issues f
+ound. (ran in 1.3s)
+위치 줄:1 문자:1
++ flutter analyze --n
+o-pub 2>&1 | Out-File
+ -FilePath analyze_re
+sult.txt ...
++ ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (25 issu   
+ es found. (ran i    
+n 1.3s):String)     [
+], RemoteExcept    io
+n
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 

@@ -1,0 +1,10 @@
+Analyzing mock_investment_app...                                
+
+   info - 'dart:html' is deprecated and shouldn't be used. Use package:web and dart:js_interop instead - lib\features\home\widgets\chart_panel_web.dart:3:1 - deprecated_member_use
+warning - Unused import: '../services/trade_engine.dart' - lib\providers\orders_provider.dart:6:8 - unused_import
+  error - The named parameter 'pairKey' isn't defined - lib\providers\orders_provider.dart:113:11 - undefined_named_parameter
+  error - The named parameter 'symbol' isn't defined - lib\providers\orders_provider.dart:116:11 - undefined_named_parameter
+   info - 'dart:html' is deprecated and shouldn't be used. Use package:web and dart:js_interop instead - lib\providers\url_helper_web.dart:2:1 - deprecated_member_use
+   info - 'dart:html' is deprecated and shouldn't be used. Use package:web and dart:js_interop instead - lib\web\js_bridge_web.dart:4:1 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - test_color_api.dart:6:30 - deprecated_member_use
+

@@ -101,6 +101,47 @@ class BinanceRestService {
       return null;
     }
   }
+  
+  /// Order Book 조회
+  Future<OrderBook?> fetchOrderBook({
+    required String symbol,
+    int limit = 100,
+  }) async {
+    try {
+      final url = Uri.parse('$_baseUrl/api/v3/depth').replace(queryParameters: {
+        'symbol': symbol.toUpperCase(),
+        'limit': limit.toString(),
+      });
+      
+      final response = await http.get(url);
+      
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        
+        final bids = (data['bids'] as List).map((bid) {
+          return OrderBookEntry(
+            price: double.parse(bid[0]),
+            quantity: double.parse(bid[1]),
+          );
+        }).toList();
+        
+        final asks = (data['asks'] as List).map((ask) {
+          return OrderBookEntry(
+            price: double.parse(ask[0]),
+            quantity: double.parse(ask[1]),
+          );
+        }).toList();
+        
+        return OrderBook(bids: bids, asks: asks);
+      } else {
+        print('Failed to fetch order book: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching order book: $e');
+      return null;
+    }
+  }
 }
 
 /// 24시간 통계 데이터 모델
@@ -121,5 +162,27 @@ class Ticker24h {
     required this.highPrice,
     required this.lowPrice,
     required this.volume,
+  });
+}
+
+/// Order Book 데이터 모델
+class OrderBook {
+  final List<OrderBookEntry> bids; // 매수 호가
+  final List<OrderBookEntry> asks; // 매도 호가
+  
+  OrderBook({
+    required this.bids,
+    required this.asks,
+  });
+}
+
+/// Order Book 엔트리
+class OrderBookEntry {
+  final double price;
+  final double quantity;
+  
+  OrderBookEntry({
+    required this.price,
+    required this.quantity,
   });
 }

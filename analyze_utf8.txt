@@ -1,0 +1,8 @@
+﻿Analyzing mock_investment_app...                                
+
+  error - Undefined class 'StreamSubscription' - lib\features\home\widgets\chart_panel_web.dart:25:3 - undefined_class
+warning - The value of the field '_currentPrice' isn't used - lib\features\home\widgets\chart_panel_web.dart:29:10 - unused_field
+  error - The method 'MarketSidePanel' isn't defined for the type 'TradeLayout' - lib\features\trade\widgets\trade_layout.dart:93:17 - undefined_method
+  error - The method 'MarketSidePanel' isn't defined for the type 'TradeLayout' - lib\features\trade\widgets\trade_layout.dart:144:20 - undefined_method
+  error - The method 'MarketSidePanel' isn't defined for the type 'TradeLayout' - lib\features\trade\widgets\trade_layout.dart:207:26 - undefined_method
+

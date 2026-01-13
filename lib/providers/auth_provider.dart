@@ -92,12 +92,12 @@ class AuthProvider extends ChangeNotifier {
       print('[AuthProvider] Session exists: ${session != null}');
       if (session != null) {
         print('[AuthProvider] Session.accessToken exists: ${session.accessToken.isNotEmpty}');
-        print('[AuthProvider] Session.user.id: ${session.user?.id}');
+        print('[AuthProvider] Session.user.id: ${session.user.id}');
       }
       
       // LocalStorage keys dump removed (requires dart:html)
       
-      addLog('Current User: ${_currentUser?.email ?? "None"}');
+      addLog('Current User: ${_currentUser!.email ?? "None"}');
       
       if (state.event == AuthChangeEvent.signedIn || state.event == AuthChangeEvent.initialSession) {
         print('[AuthProvider] SIGNED_IN detected!');

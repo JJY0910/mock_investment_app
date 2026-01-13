@@ -1,0 +1,21 @@
+Analyzing mock_investment_app...                                
+
+  error - Missing concrete implementation of 'abstract class State<T extends StatefulWidget> with Diagnosticable.build' - lib\features\home\widgets\chart_panel_web.dart:23:7 - non_abstract_class_inherits_abstract_member
+  error - A try block must be followed by an 'on', 'catch', or 'finally' clause - lib\features\home\widgets\chart_panel_web.dart:170:5 - missing_catch_or_finally
+  error - Expected to find ';' - lib\features\home\widgets\chart_panel_web.dart:222:7 - expected_token
+  error - Expected to find ')' - lib\features\home\widgets\chart_panel_web.dart:223:5 - expected_token
+  error - 'catch' can't be used as an identifier because it's a keyword - lib\features\home\widgets\chart_panel_web.dart:223:7 - expected_identifier_but_got_keyword
+  error - The method 'catch' isn't defined for the type '_ChartPanelState' - lib\features\home\widgets\chart_panel_web.dart:223:7 - undefined_method
+  error - Undefined name 'e' - lib\features\home\widgets\chart_panel_web.dart:223:14 - undefined_identifier
+  error - Expected to find ';' - lib\features\home\widgets\chart_panel_web.dart:223:15 - expected_token
+  error - Undefined name 'e' - lib\features\home\widgets\chart_panel_web.dart:224:49 - undefined_identifier
+  error - Undefined name 'e' - lib\features\home\widgets\chart_panel_web.dart:225:61 - undefined_identifier
+  error - 'finally' can't be used as an identifier because it's a keyword - lib\features\home\widgets\chart_panel_web.dart:226:7 - expected_identifier_but_got_keyword
+  error - Expected a statement - lib\features\home\widgets\chart_panel_web.dart:226:7 - missing_statement
+  error - Expected to find ';' - lib\features\home\widgets\chart_panel_web.dart:226:7 - expected_token
+  error - Undefined name 'finally' - lib\features\home\widgets\chart_panel_web.dart:226:7 - undefined_identifier
+warning - The declaration 'build' isn't referenced - lib\features\home\widgets\chart_panel_web.dart:255:10 - unused_element
+warning - The declaration 'dispose' isn't referenced - lib\features\home\widgets\chart_panel_web.dart:313:8 - unused_element
+  error - Expected to find '}' - lib\features\home\widgets\chart_panel_web.dart:321:1 - expected_token
+
+17 issues found. (ran in 1.0s)

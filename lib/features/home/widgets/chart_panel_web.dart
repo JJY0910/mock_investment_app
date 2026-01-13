@@ -1,16 +1,20 @@
-import 'dart:async';
-// ignore: avoid_web_libraries_in_flutter
+// ignore: avoid_web_libraries_in_flutter, deprecated_member_use
 import 'dart:html' as html;
-import 'dart:js_util' as js_util;
-// Use dart:ui_web for platformViewRegistry
 import 'dart:ui_web' as ui_web;
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../providers/selected_coin_provider.dart';
 import '../../../services/binance_rest_service.dart';
 import '../../../services/binance_websocket_service.dart';
+import '../../../web/js_bridge.dart' as js_bridge;
 
 /// 실시간 트레이딩 차트 패널 (Web 전용)
 class ChartPanel extends StatefulWidget {
-  const ChartPanel({Key? key}) : super(key: key);
+  final String timeframe;
+  
+  const ChartPanel({Key? key, this.timeframe = '1m'}) : super(key: key);
 
   @override
   State<ChartPanel> createState() => _ChartPanelState();
@@ -23,10 +27,10 @@ class _ChartPanelState extends State<ChartPanel> {
   
   StreamSubscription<KlineUpdate>? _klineSubscription;
   
-  String _selectedSymbol = 'BTCUSDT';
-  double _currentPrice = 0.0;
-  double _priceChange = 0.0;
-  bool _isLoading = false;
+  // Symbol from Provider only (SSOT)
+  String? _currentSymbol;
+  // Unused fields removed: _currentPrice
+  // Unused fields removed: _priceChange, _isLoading
   String? _errorMessage;
   
   // Unique view type to avoid registry conflicts
@@ -46,11 +50,18 @@ class _ChartPanelState extends State<ChartPanel> {
     _registerViewFactory();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+  
+  // ignore: undefined_prefixed_name
   void _registerViewFactory() {
     if (_viewRegistered) return;
     
     try {
-      // Use ui_web.platformViewRegistry instead of ui.platformViewRegistry
+      // Use ui_web.platformViewRegistry without ignore if possible, but keep ignore just in case
+      // ignore: undefined_prefixed_name
       ui_web.platformViewRegistry.registerViewFactory(
         _viewType,
         (int viewId) {
@@ -119,8 +130,8 @@ class _ChartPanelState extends State<ChartPanel> {
     
     // Create chart via JS
     try {
-      final result = js_util.callMethod(
-        html.window,
+      final result = js_bridge.callMethod(
+        js_bridge.window,
         'createChart',
         [_viewType, width.floor(), height.floor()],
       );
@@ -141,9 +152,9 @@ class _ChartPanelState extends State<ChartPanel> {
 
   bool _checkJSFunctions() {
     try {
-      return js_util.hasProperty(html.window, 'createChart') &&
-             js_util.hasProperty(html.window, 'setChartData') &&
-             js_util.hasProperty(html.window, 'updateCandle');
+      return js_bridge.hasProperty(js_bridge.window, 'createChart') &&
+             js_bridge.hasProperty(js_bridge.window, 'setChartData') &&
+             js_bridge.hasProperty(js_bridge.window, 'updateCandle');
     } catch (e) {
       return false;
     }
@@ -153,7 +164,6 @@ class _ChartPanelState extends State<ChartPanel> {
     if (!_chartReady) return;
     
     setState(() {
-      _isLoading = true;
       _errorMessage = null;
     });
 
@@ -162,30 +172,34 @@ class _ChartPanelState extends State<ChartPanel> {
       await _klineSubscription?.cancel();
       _klineSubscription = null;
       await _ws.unsubscribeFromKline();
+
+      if (_currentSymbol == null || _currentSymbol!.isEmpty) return;
       
-      print('[ChartPanel] Loading data for $_selectedSymbol');
+      final baseSymbol = _currentSymbol!.split(String.fromCharCodes([85, 83, 68, 84]))[0];
+      final market = '$baseSymbol/KRW';
+      print('[Candles] market=$market tf=${widget.timeframe} loading...');
       
       // [2] REST로 초기 500개 캔들 로드
       final klines = await _rest.fetchKlines(
-        symbol: _selectedSymbol,
-        interval: '1m',
+        symbol: _currentSymbol!,
+        interval: widget.timeframe,
         limit: 500,
       );
       
+      print('[Candles] market=$market tf=${widget.timeframe} count=${klines.length} lastTs=${klines.isNotEmpty ? klines.last.openTime : 0}');
+
       if (klines.isNotEmpty) {
-        // Set initial price
-        setState(() => _currentPrice = klines.last.close);
-        
         // [3] TradingView 형식으로 변환 후 차트에 세팅
-        final tvData = _toTvCandles(klines);
-        js_util.callMethod(
-          html.window,
+        final tvCandles = _toTvCandles(klines);
+        
+        js_bridge.callMethod(
+          js_bridge.window,
           'setChartData',
-          [_viewType, js_util.jsify(tvData)],
+          [_viewType, js_bridge.jsify(tvCandles)],
         );
         
         // [4] WebSocket 구독 시작
-        await _ws.subscribeToKline(_selectedSymbol, '1m');
+        await _ws.subscribeToKline(_currentSymbol!, widget.timeframe);
         
         _klineSubscription = _ws.klineStream.listen(
           (klineUpdate) {
@@ -196,22 +210,14 @@ class _ChartPanelState extends State<ChartPanel> {
             final tvCandle = _toTvCandleFromUpdate(latestKline);
             
             // 차트 업데이트
-            js_util.callMethod(
-              html.window,
+            js_bridge.callMethod(
+              js_bridge.window,
               'updateCandle',
-              [_viewType, js_util.jsify(tvCandle)],
+              [_viewType, js_bridge.jsify(tvCandle)],
             );
-            
-            // 현재가 업데이트
-            final newPrice = latestKline.close;
-            setState(() {
-              _priceChange = newPrice - _currentPrice;
-              _currentPrice = newPrice;
-            });
           },
           onError: (error) {
             print('[ChartPanel] WebSocket error: $error');
-            setState(() => _errorMessage = 'Connection error');
           },
         );
         
@@ -221,22 +227,16 @@ class _ChartPanelState extends State<ChartPanel> {
       print('[ChartPanel] Error loading chart: $e');
       setState(() => _errorMessage = 'Failed to load data: $e');
     } finally {
-      setState(() => _isLoading = false);
+      // setState(() => _isLoading = false);
     }
   }
 
-  void _onSymbolChanged(String? symbol) {
-    if (symbol == null || symbol == _selectedSymbol) return;
-    
-    setState(() {
-      _selectedSymbol = symbol;
-      _currentPrice = 0.0;
-      _priceChange = 0.0;
-    });
-    
-    _loadChartData();
-  }
+
   
+  // _onSymbolChanged 및 Header UI 제거 -> 외부에서 제어됨을 가정
+  // (실제로는 TradeLayout에서 key 변경 등으로 rebuild를 유도하거나, 여기서 Provider를 listen해야 함)
+  // 현재 구조상 key가 바뀌면 새로 생성되므로 initChart가 호출됨.
+
   void _onLayoutChanged(double width, double height) {
     if (width > 0 && height > 0) {
       if (!_chartReady) {
@@ -245,8 +245,8 @@ class _ChartPanelState extends State<ChartPanel> {
         // Resize existing chart
         _chartWidth = width;
         _chartHeight = height;
-        js_util.callMethod(
-          html.window,
+        js_bridge.callMethod(
+          js_bridge.window,
           'resizeChart',
           [_viewType, width.floor(), height.floor()],
         );
@@ -256,92 +256,28 @@ class _ChartPanelState extends State<ChartPanel> {
 
   @override
   Widget build(BuildContext context) {
+    final selectedCoinProvider = Provider.of<SelectedCoinProvider>(context);
+    final coin = selectedCoinProvider.selectedCoin;
+    final newSymbol = coin != null ? '${coin.base}USDT' : 'BTCUSDT';
+
+    if (newSymbol != _currentSymbol) {
+      _currentSymbol = newSymbol;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _loadChartData();
+      });
+    }
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Header: Symbol selector + Current price
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.grey[50],
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12),
-              ),
-            ),
-            child: Row(
-              children: [
-                // Symbol dropdown
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey[300]!),
-                  ),
-                  child: DropdownButton<String>(
-                    value: _selectedSymbol,
-                    underline: const SizedBox(),
-                    items: ['BTCUSDT', 'ETHUSDT', 'XRPUSDT']
-                        .map((symbol) => DropdownMenuItem(
-                              value: symbol,
-                              child: Text(
-                                symbol,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ))
-                        .toList(),
-                    onChanged: _isLoading ? null : _onSymbolChanged,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                
-                // Current price
-                if (_currentPrice > 0) ...[
-                  Text(
-                    '\$${_currentPrice.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  if (_priceChange != 0) ...[
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: _priceChange > 0 ? Colors.green[50] : Colors.red[50],
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        '${_priceChange > 0 ? '+' : ''}${_priceChange.toStringAsFixed(2)}',
-                        style: TextStyle(
-                          color: _priceChange > 0 ? Colors.green : Colors.red,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
-                
-                const Spacer(),
-                
-                // Loading indicator
-                if (_isLoading)
-                  const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-              ],
-            ),
-          ),
+          // Header 제거됨 (MarketSummaryBar 통합)
+          
+          // Error message
+          
+          // Chart area
           
           // Error message
           if (_errorMessage != null)
