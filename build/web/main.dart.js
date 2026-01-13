@@ -92726,7 +92726,8 @@ s=1
 break}p.a5(new A.awa(p))
 s=4
 return A.r(n.xD(l),$async$qa)
-case 4:if(b&&p.c!=null){o=p.c
+case 4:if(b&&p.c!=null){A.a3("[Analytics] sign_up: method=kakao (GA4 simulated)")
+o=p.c
 o.toString
 m=t.X
 A.aFt(o,"/home",m,m)}else p.a5(new A.awb(p))
@@ -92813,10 +92814,12 @@ switch(a.a){case 0:return A.b([new A.eh("\uae30\ubcf8 \uac70\ub798",!0),new A.eh
 case 1:return A.b([new A.eh("Free \uc804\uccb4 \uae30\ub2a5",!0),new A.eh("AI \ucf54\uce58 3\ube14\ub85d",!0),new A.eh("\ubc30\uc9c0 \uc0c1\uc138 \uc124\uba85",!0),new A.eh(s,!0),new A.eh(r,!1)],t.cQ)
 case 2:return A.b([new A.eh("Pro \uc804\uccb4 \uae30\ub2a5",!0),new A.eh(r,!0),new A.eh("\ud328\ud134 \ud0d0\uc9c0",!0),new A.eh("\ub7ad\ud0b9 \uac15\uc870",!0),new A.eh("\uc6b0\uc120 \uc9c0\uc6d0",!0)],t.cQ)}},
 z0(a,b){return this.af7(a,b)},
-af7(a,b){var s=0,r=A.y(t.H)
+af7(a,b){var s=0,r=A.y(t.H),q
 var $async$z0=A.z(function(c,d){if(c===1)return A.v(d,r)
-for(;;)switch(s){case 0:s=2
-return A.r(A.ex(a,!1,t.HS).DB(b),$async$z0)
+for(;;)switch(s){case 0:q=A.ex(a,!1,t.HS)
+A.a3("[Analytics] begin_checkout: tier="+b.b+", value="+A.k(b.d)+" (GA4 simulated)")
+s=2
+return A.r(q.DB(b),$async$z0)
 case 2:if(a.e!=null)A.aDD(!0,new A.aia(b),a,t.z)
 return A.w(null,r)}})
 return A.x($async$z0,r)}}

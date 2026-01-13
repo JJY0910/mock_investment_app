@@ -9,6 +9,7 @@ import '../services/trade_engine.dart';
 import '../config/trading_fees.dart';
 import 'trade_history_provider.dart';
 import 'trader_score_provider.dart'; // PHASE 2-1: 점수 계산
+import '../services/analytics_service.dart'; // GA4: 점수 계산
 
 /// 포트폴리오 Provider
 /// shared_preferences로 영구 저장
@@ -170,9 +171,17 @@ class PortfolioProvider extends ChangeNotifier {
           f.time.isAfter(DateTime.now().subtract(const Duration(days: 30)))
         ).toList();
         
-        await scoreProvider.onTradeFilled(
+        final scoreDelta = await scoreProvider.onTradeFilled(
           fill: fill,
           trades30d: trades30d,
+        ) - scoreProvider.currentScore;
+        
+        // GA4: trade_completed event
+        AnalyticsService.logTradeCompleted(
+          symbol: coin.symbol,
+          side: 'buy',
+          valueKrw: krwAmount,
+          scoreDelta: scoreDelta,
         );
       }
 
@@ -246,9 +255,17 @@ class PortfolioProvider extends ChangeNotifier {
           f.time.isAfter(DateTime.now().subtract(const Duration(days: 30)))
         ).toList();
         
-        await scoreProvider.onTradeFilled(
+        final scoreDelta = await scoreProvider.onTradeFilled(
           fill: fill,
           trades30d: trades30d,
+        ) - scoreProvider.currentScore;
+        
+        // GA4: trade_completed event
+        AnalyticsService.logTradeCompleted(
+          symbol: coin.symbol,
+          side: 'sell',
+          valueKrw: sellAmount,
+          scoreDelta: scoreDelta,
         );
       }
 

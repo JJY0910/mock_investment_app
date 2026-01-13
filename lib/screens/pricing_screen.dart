@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/subscription_provider.dart';
 import '../models/plan_tier.dart';
+import '../services/analytics_service.dart'; // GA4
 
 /// Pricing 페이지
 class PricingScreen extends StatelessWidget {
@@ -301,6 +302,12 @@ class PricingScreen extends StatelessWidget {
   
   void _handleUpgrade(BuildContext context, PlanTier tier) async {
     final subscriptionProvider = Provider.of<SubscriptionProvider>(context, listen: false);
+    
+    // GA4: begin_checkout event
+    AnalyticsService.logBeginCheckout(
+      tier: tier.name,
+      valueUsd: tier.monthlyPrice,
+    );
     
     // Mock 업그레이드
     await subscriptionProvider.upgradeTo(tier);

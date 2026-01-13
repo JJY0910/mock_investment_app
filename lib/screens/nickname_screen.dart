@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
+import '../services/analytics_service.dart'; // GA4
 
 /// 닉네임 설정 화면 (온보딩)
 class NicknameScreen extends StatefulWidget {
@@ -61,6 +62,9 @@ class _NicknameScreenState extends State<NicknameScreen> {
     final success = await userProvider.setNickname(nickname);
     
     if (success && mounted) {
+      // GA4: sign_up event
+      AnalyticsService.logSignUp(method: 'kakao');
+      
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       setState(() {
