@@ -58,7 +58,7 @@ class MarketSummaryBar extends StatelessWidget {
 
   // Desktop Layout (업비트 스타일)
   Widget _buildDesktopLayout(dynamic selectedCoin, bool hasData, double price, double changePercent, bool isPositive) {
-    final coinName = selectedCoin?.name ?? 'Bitcoin';
+    final coinName = selectedCoin?.displayName ?? 'Bitcoin';
     final coinSymbol = selectedCoin?.base ?? 'BTC';
     
     // 등락금액 계산
@@ -155,7 +155,7 @@ class MarketSummaryBar extends StatelessWidget {
 
   // Mobile Layout
   Widget _buildMobileLayout(dynamic selectedCoin, bool hasData, double price, double changePercent, bool isPositive) {
-    final coinName = selectedCoin?.name ?? 'Bitcoin';
+    final coinName = selectedCoin?.displayName ?? 'Bitcoin';
     final coinSymbol = selectedCoin?.base ?? 'BTC';
     
     return Column(
