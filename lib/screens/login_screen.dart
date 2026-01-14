@@ -73,6 +73,53 @@ class LoginScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 64),
                 
+                // Apple 로그인 버튼 (준비 중)
+                ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('준비 중'),
+                        content: const Text('Apple 로그인은 iOS 앱 출시 시 지원 예정입니다.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('확인'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black, // Apple 검정
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 48,
+                      vertical: 16,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 8,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(Icons.apple, size: 24),
+                      SizedBox(width: 12),
+                      Text(
+                        'Apple로 로그인',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                const SizedBox(height: 16),
+                
                 // 카카오 로그인 버튼
                 Consumer<AuthProvider>(
                   builder: (context, authProvider, child) {

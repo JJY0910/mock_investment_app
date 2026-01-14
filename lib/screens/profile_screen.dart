@@ -118,8 +118,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           final user = userProvider.currentUser;
           final authUser = Supabase.instance.client.auth.currentUser;
 
+          // 로딩 중이면 로딩 표시
+          if (userProvider.loading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          
+          // OnboardingGate가 이미 체크했으므로, 여기 도달하면 user가 있어야 함
+          // 그래도 방어적으로 체크
           if (user == null) {
-            return const Center(child: Text('로그인이 필요합니다'));
+            return const Center(child: Text('사용자 정보를 불러오는 중...'));
           }
 
           return SingleChildScrollView(

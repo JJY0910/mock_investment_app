@@ -69,16 +69,14 @@ class _TradeScreenState extends State<TradeScreen> {
                 const MarketInfoTabs(),
                 
                 // 1st viewport: TradeLayout (반응형)
-                SizedBox(
-                  height: 800,
-                  child: TradeLayout(
-                    selectedSymbol: selectedSymbol,
-                    onCoinSelected: _onSymbolChanged, // 콜백 전달
-                    chartPanel: const ChartPanel(),
-                    orderPanel: const OrderPanel(),
-                    // balanceCard 제거
-                    bottomTabs: const BottomTabs(),
-                  ),
+                // Fixed: Removed fixed height: 800 to eliminate blank space
+                TradeLayout(
+                  selectedSymbol: selectedSymbol,
+                  onCoinSelected: _onSymbolChanged, // 콜백 전달
+                  chartPanel: const ChartPanel(),
+                  orderPanel: const OrderPanel(),
+                  // balanceCard 제거
+                  bottomTabs: const BottomTabs(),
                 ),
                 
                 // 2nd viewport: 호가+주문 패널

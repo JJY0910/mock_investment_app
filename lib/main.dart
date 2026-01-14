@@ -251,34 +251,35 @@ class AuthGate extends StatelessWidget {
 
 
 // PHASE 2-2: OnboardingGate - 닉네임 미설정 시 강제 이동
-class OnboardingGate extends StatefulWidget {
+class OnboardingGate extends StatelessWidget {
   final Widget child;
   
   const OnboardingGate({Key? key, required this.child}) : super(key: key);
   
   @override
-  State<OnboardingGate> createState() => _OnboardingGateState();
-}
-
-class _OnboardingGateState extends State<OnboardingGate> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkNickname();
-    });
-  }
-  
-  void _checkNickname() {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    
-    if (userProvider.needsNickname) {
-      Navigator.pushReplacementNamed(context, '/nickname');
-    }
-  }
-  
-  @override
   Widget build(BuildContext context) {
-    return widget.child;
+    return Consumer<UserProvider>(
+      builder: (context, userProvider, _) {
+        // 로딩 중이면 로딩 표시
+        if (userProvider.loading) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        
+        // 닉네임 미설정이면 즉시 /nickname으로 이동
+        if (userProvider.needsNickname) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pushReplacementNamed(context, '/nickname');
+          });
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        
+        // 정상: child 렌더
+        return child;
+      },
+    );
   }
 }
