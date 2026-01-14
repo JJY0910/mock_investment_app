@@ -178,10 +178,9 @@ class PortfolioProvider extends ChangeNotifier {
         
         // GA4: trade_completed event
         AnalyticsService.logTradeCompleted(
+          tradeType: 'buy',
           symbol: coin.symbol,
-          side: 'buy',
-          valueKrw: krwAmount,
-          scoreDelta: scoreDelta,
+          amount: quantity, // 수량
         );
       }
 
@@ -262,10 +261,9 @@ class PortfolioProvider extends ChangeNotifier {
         
         // GA4: trade_completed event
         AnalyticsService.logTradeCompleted(
+          tradeType: 'sell',
           symbol: coin.symbol,
-          side: 'sell',
-          valueKrw: sellAmount,
-          scoreDelta: scoreDelta,
+          amount: quantity, // 수량
         );
       }
 

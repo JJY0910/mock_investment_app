@@ -305,8 +305,8 @@ class PricingScreen extends StatelessWidget {
     
     // GA4: begin_checkout event
     AnalyticsService.logBeginCheckout(
-      tier: tier.name,
-      valueUsd: tier.monthlyPrice,
+      itemName: '${tier.displayName} Plan',
+      value: tier.monthlyPrice,
     );
     
     // Mock 업그레이드

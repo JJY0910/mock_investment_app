@@ -63,7 +63,7 @@ class _NicknameScreenState extends State<NicknameScreen> {
     
     if (success && mounted) {
       // GA4: sign_up event
-      AnalyticsService.logSignUp(method: 'kakao');
+      AnalyticsService.logSignUp(method: 'nickname_onboarding');
       
       Navigator.pushReplacementNamed(context, '/home');
     } else {

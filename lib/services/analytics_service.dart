@@ -2,36 +2,31 @@ import 'package:flutter/foundation.dart';
 
 /// GA4 Analytics Service (Universal Stub)
 /// 
-/// Platform limitations prevented direct use of 'dart:js' without package upgrades.
-/// Currently logs events to console for verification.
+/// Platform limitations prevented direct use of 'dart:js' or 'package:web'.
+/// The GA4 Tag IS present in index.html, so PageViews are tracked automatically.
+/// Event calls are simulated.
 class AnalyticsService {
   
-  /// Sign up event
-  static void logSignUp({String method = 'kakao'}) {
-    if (kIsWeb) {
-      print('[Analytics] sign_up: method=$method (GA4 simulated)');
-    }
+  /// 회원가입
+  static void logSignUp({String method = 'nickname_onboarding'}) {
+    // Avoid unused parameter warning by using it
+    debugPrint('[Analytics] sign_up: method=$method');
   }
   
-  /// Trade completed event
+  /// 거래 체결
   static void logTradeCompleted({
+    required String tradeType,
     required String symbol,
-    required String side,
-    required double valueKrw,
-    required double scoreDelta,
+    required double amount,
   }) {
-    if (kIsWeb) {
-      print('[Analytics] trade_completed: $symbol $side, val=$valueKrw, delta=$scoreDelta (GA4 simulated)');
-    }
+    debugPrint('[Analytics] trade_completed: type=$tradeType, symbol=$symbol, amount=$amount');
   }
   
-  /// Begin checkout event
+  /// 구독 업그레이드
   static void logBeginCheckout({
-    required String tier,
-    required double valueUsd,
+    required String itemName,
+    required double value,
   }) {
-    if (kIsWeb) {
-      print('[Analytics] begin_checkout: tier=$tier, value=$valueUsd (GA4 simulated)');
-    }
+    debugPrint('[Analytics] begin_checkout: item=$itemName, val=$value');
   }
 }
