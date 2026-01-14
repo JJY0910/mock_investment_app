@@ -28,7 +28,7 @@ class AnalyticsService {
     
     // Add user_tier from SubscriptionProvider
     if (_subscriptionProvider != null) {
-      enriched['user_tier'] = _subscriptionProvider!.currentTier.name;
+      enriched['user_tier'] = _subscriptionProvider!.currentTier.toString().split('.').last;
     } else {
       enriched['user_tier'] = 'unknown';
       

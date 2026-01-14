@@ -25,7 +25,7 @@ class Subscription {
   
   Map<String, dynamic> toJson() {
     return {
-      'tier': tier.name,
+      'tier': tier.toString().split('.').last,
       'startedAt': startedAt?.toIso8601String(),
       'expiresAt': expiresAt?.toIso8601String(),
     };
@@ -39,7 +39,7 @@ class Subscription {
       final tierValue = json['tier'];
       if (tierValue is String) {
         tier = PlanTier.values.firstWhere(
-          (t) => t.name == tierValue,
+          (t) => t.toString().split('.').last == tierValue,
           orElse: () => PlanTier.free,
         );
       }

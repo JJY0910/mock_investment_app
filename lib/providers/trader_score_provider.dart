@@ -270,7 +270,7 @@ class TraderScoreProvider extends ChangeNotifier {
       // GA4: badge earned event (if badge changed)
       if (_currentBadge != oldBadge && _currentBadge != CoachBadge.rookie) {
         AnalyticsService.logCoachBadgeEarned(
-          badgeId: _currentBadge.name,
+          badgeId: _currentBadge.toString().split('.').last,
           badgeName: _currentBadge.displayName,
           scoreAtEarn: newScore,
         );
