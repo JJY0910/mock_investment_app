@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 import '../providers/auth_provider.dart';
+import '../providers/subscription_provider.dart';
 import '../services/auth_service.dart';
+import '../services/ranking_service.dart';
+import '../models/ranking_entry.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 
 /// 내정보 화면
@@ -19,6 +22,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _isChanging = false;
   bool _isLoading = false;
   String? _error;
+  
+  // 랭킹 정보 (별도 로드)
+  RankingEntry? _myRank;
+  bool _isLoadingRank = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // 화면 진입 시 랭킹 정보 로드
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadMyRank();
+    });
+  }
+  
+  Future<void> _loadMyRank() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final user = userProvider.currentUser;
+    if (user == null) return;
+    
+    if (mounted) setState(() => _isLoadingRank = true);
+    
+    try {
+      final rankingService = RankingService();
+      // 내 수익률 랭킹 조회 (전기간)
+      final rankEntry = await rankingService.fetchMyProfitRank(
+        userId: user.id,
+        timeframe: 'all',
+      );
+      
+      if (mounted) {
+        setState(() {
+          _myRank = rankEntry;
+          _isLoadingRank = false;
+        });
+      }
+    } catch (e) {
+      print('[ProfileScreen] Rank load error: $e');
+      if (mounted) setState(() => _isLoadingRank = false);
+    }
+  }
 
   @override
   void dispose() {
@@ -113,19 +156,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: const Text('내정보'),
         elevation: 0,
       ),
-      body: Consumer<UserProvider>(
-        builder: (context, userProvider, child) {
+      // Consumer2를 사용하여 UserProvider와 SubscriptionProvider 동시 사용
+      body: Consumer2<UserProvider, SubscriptionProvider>(
+        builder: (context, userProvider, subProvider, child) {
           final user = userProvider.currentUser;
           final authUser = Supabase.instance.client.auth.currentUser;
 
-          // 로딩 중이면 로딩 표시
+          // 1. 유저 정보 로딩 중이면 스피너 표시
           if (userProvider.loading) {
             return const Center(child: CircularProgressIndicator());
           }
           
-          // OnboardingGate가 이미 체크했으므로, 여기 도달하면 user가 있어야 함
-          // 그래도 방어적으로 체크
-          // 로딩 중이 아닌데 유저가 없으면 에러 상태 (재시도 버튼 제공)
+          // 2. 유저 정보가 없으면 에러/재시도 화면 (무한 로딩 방지)
           if (user == null) {
             return Center(
               child: Column(
@@ -137,7 +179,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      // 세션 재동기화 시도
                       final session = Supabase.instance.client.auth.currentSession;
                       if (session != null) {
                         userProvider.syncFromSession(
@@ -146,7 +187,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           session.user.appMetadata,
                         );
                       } else {
-                        // 세션도 없으면 로그인으로
                          Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
                       }
                     },
@@ -157,6 +197,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }
 
+          // 3. 정상: 프로필 UI 렌더링
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -200,6 +241,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
@@ -208,6 +251,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       fontSize: 14,
                                       color: Colors.grey[600],
                                     ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                               ),
@@ -217,10 +262,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         const SizedBox(height: 16),
                         const Divider(),
                         const SizedBox(height: 8),
+                        
+                        // 플랜 및 랭킹 정보 추가
+                        _buildInfoRow(
+                          '현재 플랜', 
+                          subProvider.currentTier.displayName,
+                          isHighlight: subProvider.isPro || subProvider.isMax
+                        ),
+                        
+                        _buildInfoRow(
+                          '수익률 랭킹',
+                          _isLoadingRank 
+                              ? '로딩 중...' 
+                              : (_myRank != null ? '${_myRank!.rank}위' : '순위 없음'),
+                          isHighlight: _myRank != null && _myRank!.rank <= 10
+                        ),
+                        
                         _buildInfoRow(
                           '가입일',
                           _formatDate(user.createdAt),
                         ),
+                        
                         _buildInfoRow(
                           '로그인 방식',
                           user.provider == 'kakao' ? '카카오' : user.provider,
@@ -229,11 +291,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
+                
+                // 멤버십 업그레이드 유도 (Free 유저인 경우)
+                if (subProvider.isFree) ...[
+                  const SizedBox(height: 16),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.indigo.shade50, Colors.blue.shade50],
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.blue.shade100),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.star_rounded, color: Colors.indigo, size: 28),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                'Pro 멤버십으로 업그레이드',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              Text(
+                                '실시간 랭킹 확인 및 고급 차트 제공',
+                                style: TextStyle(fontSize: 12, color: Colors.blueGrey),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/pricing');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.indigo,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                          ),
+                          child: const Text('보기'),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+                
                 const SizedBox(height: 24),
 
                 // 닉네임 변경 섹션
                 Text(
-                  '닉네임 변경',
+                  '계정 관리',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 12),
@@ -311,39 +422,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         : Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                '닉네임 변경은 1회만 가능합니다.',
-                                style: TextStyle(fontSize: 14),
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: const Text('닉네임 변경'),
+                                subtitle: const Text('닉네임은 1회만 변경 가능합니다.'),
+                                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                                onTap: () {
+                                  setState(() {
+                                    _isChanging = true;
+                                  });
+                                },
                               ),
-                              const SizedBox(height: 12),
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isChanging = true;
-                                    });
-                                  },
-                                  child: const Text('닉네임 변경하기'),
-                                ),
+                              const Divider(),
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: const Text('로그아웃', style: TextStyle(color: Colors.red)),
+                                onTap: _logout,
                               ),
                             ],
                           ),
-                  ),
-                ),
-                const SizedBox(height: 32),
-
-                // 로그아웃 버튼
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: _logout,
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.red,
-                      side: const BorderSide(color: Colors.red),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: const Text('로그아웃'),
                   ),
                 ),
               ],
@@ -354,9 +451,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(String label, String value, {bool isHighlight = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -369,9 +466,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
-              fontWeight: FontWeight.w500,
+              fontWeight: isHighlight ? FontWeight.bold : FontWeight.w500,
+              color: isHighlight ? Colors.blue[700] : Colors.black87,
             ),
           ),
         ],
