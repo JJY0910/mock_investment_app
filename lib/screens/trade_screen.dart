@@ -53,41 +53,47 @@ class _TradeScreenState extends State<TradeScreen> {
         
         return Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                // 상단: AppHeader
-                const AppHeader(),
-                
-                // 헤더 아래: MarketSummaryBar
-                const MarketSummaryBar(),
-                
-                // 타임프레임 바 (차트 바로 위)
-                const TimeframeBar(),
-                
-                // 시세/정보 탭 + 4지표
-                const MarketInfoTabs(),
-                
-                // 1st viewport: TradeLayout (반응형)
-                // Fixed: Removed fixed height: 800 to eliminate blank space
-                TradeLayout(
-                  selectedSymbol: selectedSymbol,
-                  onCoinSelected: _onSymbolChanged, // 콜백 전달
-                  chartPanel: const ChartPanel(),
-                  orderPanel: const OrderPanel(),
-                  // balanceCard 제거
-                  bottomTabs: const BottomTabs(),
+          // FIX: Use Column with Expanded instead of SingleChildScrollView
+          // This prevents LayoutBuilder from receiving unbounded height
+          body: Column(
+            children: [
+              // 상단: AppHeader
+              const AppHeader(),
+              
+              // 헤더 아래: MarketSummaryBar
+              const MarketSummaryBar(),
+              
+              // 타임프레임 바 (차트 바로 위)
+              const TimeframeBar(),
+              
+              // 시세/정보 탭 + 4지표
+              const MarketInfoTabs(),
+              
+              // Main content: TradeLayout with proper constraints
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      TradeLayout(
+                        selectedSymbol: selectedSymbol,
+                        onCoinSelected: _onSymbolChanged,
+                        chartPanel: const ChartPanel(),
+                        orderPanel: const OrderPanel(),
+                        bottomTabs: const BottomTabs(),
+                      ),
+                      
+                      // 2nd viewport: 호가+주문 패널
+                      const TradeBottomSection(),
+                      
+                      // PHASE 2-3: AI 코치 카드 (최하단)
+                      const SizedBox(height: 16),
+                      const AICoachCard(),
+                      const SizedBox(height: 32),
+                    ],
+                  ),
                 ),
-                
-                // 2nd viewport: 호가+주문 패널
-                const TradeBottomSection(),
-                
-                // PHASE 2-3: AI 코치 카드 (최하단)
-                const SizedBox(height: 16),
-                const AICoachCard(),
-                const SizedBox(height: 32),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
