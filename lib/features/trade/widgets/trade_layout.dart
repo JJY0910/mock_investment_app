@@ -25,56 +25,102 @@ class TradeLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth;
-
-        // Breakpoint 기준
-        // Desktop: >= 1200px (3열 레이아웃)
-        // Tablet: 900~1199px (2열 레이아웃)
-        // Mobile: < 900px (1열 + 하단 탭)
-        
-        if (width >= 1200) {
-          return _buildDesktopLayout();
-        } else if (width >= 900) {
-          return _buildTabletLayout();
-        } else {
-          return _buildMobileLayout();
-        }
-      },
-    );
+    // FIX: Use MediaQuery instead of LayoutBuilder to avoid unbounded constraints
+    final screenWidth = MediaQuery.of(context).size.width;
+    
+    // Breakpoint 기준
+    // Desktop: >= 1200px (3열 레이아웃)
+    // Tablet: 900~1199px (2열 레이아웃)
+    // Mobile: < 900px (1열 + 하단 탭)
+    
+    if (screenWidth >= 1200) {
+      return _buildDesktopLayout();
+    } else if (screenWidth >= 900) {
+      return _buildTabletLayout();
+    } else {
+      return _buildMobileLayout();
+    }
   }
 
   // Desktop Layout (>=1200px): [좌측: 차트+주문+탭] | [우측: 마켓패널]
   Widget _buildDesktopLayout() {
-    // Fix: Constrain max height to prevent infinite expansion in ScrollView
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxHeight: 900),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 좌측 메인 영역 (70%)
-          Expanded(
-            flex: 7,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 좌측 메인 영역 (70%)
+        Expanded(
+          flex: 7,
+          child: Column(
+            children: [
+              // 1. 차트 패널 (높이 고정 또는 Flex)
+              SizedBox(
+                height: 420,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: chartPanel,
+                ),
+              ),
+
+              // 2. 주문 패널 (차트 바로 아래)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: orderPanel,
+              ),
+              const SizedBox(height: 16),
+
+              // 3. 하단 탭 (체결내역/보유자산 등)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: bottomTabs,
+              ),
+            ],
+          ),
+        ),
+
+        // 우측 사이드바 (30%): 마켓 리스트 전용
+        SizedBox(
+          width: 380,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                // 1. 차트 패널 (높이 고정 또는 Flex)
+                MarketSidePanel(
+                  onCoinSelected: onCoinSelected,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Tablet Layout (900~1199px): [차트+주문] | [마켓]
+  Widget _buildTabletLayout() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 좌측 영역 (60%)
+        Expanded(
+          flex: 6,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                // 차트 (높이 고정)
                 SizedBox(
-                  height: 420, // 차트 높이 확보 (reduced from 500)
+                  height: 380,
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: chartPanel,
                   ),
                 ),
-
-                // 2. 주문 패널 (차트 바로 아래)
+                // 주문 패널
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: orderPanel, // 자산 정보 포함된 주문 패널
+                  child: orderPanel,
                 ),
                 const SizedBox(height: 16),
-
-                // 3. 하단 탭 (체결내역/보유자산 등)
+                // 하단 탭
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   child: bottomTabs,
@@ -82,78 +128,19 @@ class TradeLayout extends StatelessWidget {
               ],
             ),
           ),
+        ),
 
-          // 우측 사이드바 (30%): 마켓 리스트 전용
-          SizedBox(
-            width: 380,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  // 마켓 패널 (전체 높이 사용)
-                  // marketSidePanel, // 기존 marketSidePanel 대신 MarketSidePanel 위젯 직접 사용
-                  MarketSidePanel(
-                    onCoinSelected: onCoinSelected,
-                  ),
-                ],
-              ),
+        // 우측 영역 (40%): 마켓 패널
+        Expanded(
+          flex: 4,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: MarketSidePanel(
+              onCoinSelected: onCoinSelected,
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  // Tablet Layout (900~1199px): [차트+주문] | [마켓]
-  Widget _buildTabletLayout() {
-    // Fix: Constrain height to prevent infinite expansion
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxHeight: 800),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 좌측 영역 (60%)
-          Expanded(
-            flex: 6,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  // 차트 (높이 고정)
-                  SizedBox(
-                    height: 380, // reduced from 400
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: chartPanel,
-                    ),
-                  ),
-                  // 주문 패널
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: orderPanel,
-                  ),
-                  const SizedBox(height: 16),
-                  // 하단 탭
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                    child: bottomTabs,
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // 우측 영역 (40%): 마켓 패널
-          Expanded(
-            flex: 4,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: MarketSidePanel(
-                onCoinSelected: onCoinSelected,
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
