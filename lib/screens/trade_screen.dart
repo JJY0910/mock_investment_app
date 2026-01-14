@@ -13,7 +13,7 @@ import '../features/trade/widgets/trade_bottom_section.dart';
 import '../features/trade/widgets/market_info_tabs.dart';
 import '../widgets/ai_coach_card.dart';
 
-/// Trading Platform Screen - FIXED LAYOUT
+/// Trading Platform Screen - FIXED LAYOUT with Error Boundary
 class TradeScreen extends StatefulWidget {
   const TradeScreen({Key? key}) : super(key: key);
 
@@ -22,74 +22,115 @@ class TradeScreen extends StatefulWidget {
 }
 
 class _TradeScreenState extends State<TradeScreen> {
+  String? _error;
+  
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final priceProvider = Provider.of<PriceProvider>(context, listen: false);
-      priceProvider.startPeriodicUpdate({
-        'BTCUSDT': 'crypto',
-        'ETHUSDT': 'crypto',
-        'XRPUSDT': 'crypto',
-      });
+      try {
+        final priceProvider = Provider.of<PriceProvider>(context, listen: false);
+        priceProvider.startPeriodicUpdate({
+          'BTCUSDT': 'crypto',
+          'ETHUSDT': 'crypto',
+          'XRPUSDT': 'crypto',
+        });
+      } catch (e) {
+        print('[TradeScreen] Error starting price updates: $e');
+        setState(() => _error = 'Failed to start price updates: $e');
+      }
     });
   }
 
   void _onSymbolChanged(String? usdtSymbol) {
     if (usdtSymbol != null) {
-      final selectedCoinProvider = Provider.of<SelectedCoinProvider>(context, listen: false);
-      selectedCoinProvider.selectByUsdtSymbol(usdtSymbol);
+      try {
+        final selectedCoinProvider = Provider.of<SelectedCoinProvider>(context, listen: false);
+        selectedCoinProvider.selectByUsdtSymbol(usdtSymbol);
+      } catch (e) {
+        print('[TradeScreen] Error changing symbol: $e');
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Error state fallback
+    if (_error != null) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              Text('오류 발생: $_error', textAlign: TextAlign.center),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => setState(() => _error = null),
+                child: const Text('다시 시도'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    
     return Consumer<SelectedCoinProvider>(
       builder: (context, selectedCoinProvider, child) {
-        final selectedCoin = selectedCoinProvider.selectedCoin;
-        final selectedSymbol = selectedCoin != null ? '${selectedCoin.base}USDT' : 'BTCUSDT';
-        
-        return Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          // FIXED: SafeArea + ListView replaces problematic Column+Expanded+SingleChildScrollView combo
-          body: SafeArea(
-            child: ListView(
-              children: [
-                // 상단: AppHeader
-                const AppHeader(),
-                
-                // 헤더 아래: MarketSummaryBar
-                const MarketSummaryBar(),
-                
-                // 타임프레임 바
-                const TimeframeBar(),
-                
-                // 시세/정보 탭 + 4지표
-                const MarketInfoTabs(),
-                
-                // Main content: TradeLayout (fixed height)
-                SizedBox(
-                  height: 800, // Fixed height container
-                  child: TradeLayout(
-                    selectedSymbol: selectedSymbol,
-                    onCoinSelected: _onSymbolChanged,
-                    chartPanel: const ChartPanel(),
-                    orderPanel: const OrderPanel(),
-                    bottomTabs: const BottomTabs(),
+        try {
+          final selectedCoin = selectedCoinProvider.selectedCoin;
+          final selectedSymbol = selectedCoin != null ? '${selectedCoin.base}USDT' : 'BTCUSDT';
+          
+          return Scaffold(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            body: SafeArea(
+              child: ListView(
+                children: [
+                  const AppHeader(),
+                  const MarketSummaryBar(),
+                  const TimeframeBar(),
+                  const MarketInfoTabs(),
+                  SizedBox(
+                    height: 800,
+                    child: TradeLayout(
+                      selectedSymbol: selectedSymbol,
+                      onCoinSelected: _onSymbolChanged,
+                      chartPanel: const ChartPanel(),
+                      orderPanel: const OrderPanel(),
+                      bottomTabs: const BottomTabs(),
+                    ),
                   ),
-                ),
-                
-                // 호가+주문 패널
-                const TradeBottomSection(),
-                
-                // AI 코치 카드
-                const SizedBox(height: 16),
-                const AICoachCard(),
-                const SizedBox(height: 32),
-              ],
+                  const TradeBottomSection(),
+                  const SizedBox(height: 16),
+                  const AICoachCard(),
+                  const SizedBox(height: 32),
+                ],
+              ),
             ),
-          ),
-        );
+          );
+        } catch (e, stack) {
+          print('[TradeScreen] Build error: $e\n$stack');
+          return Scaffold(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.warning_amber_rounded, size: 64, color: Colors.orange),
+                  const SizedBox(height: 16),
+                  const Text('화면을 불러오는 중 오류가 발생했습니다.'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => setState(() {}),
+                    child: const Text('새로고침'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
       },
     );
   }
