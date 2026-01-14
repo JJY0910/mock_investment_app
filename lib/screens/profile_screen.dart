@@ -125,8 +125,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
           
           // OnboardingGate가 이미 체크했으므로, 여기 도달하면 user가 있어야 함
           // 그래도 방어적으로 체크
+          // 로딩 중이 아닌데 유저가 없으면 에러 상태 (재시도 버튼 제공)
           if (user == null) {
-            return const Center(child: Text('사용자 정보를 불러오는 중...'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 48, color: Colors.orange),
+                  const SizedBox(height: 16),
+                  const Text('사용자 정보를 불러오지 못했습니다.'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      // 세션 재동기화 시도
+                      final session = Supabase.instance.client.auth.currentSession;
+                      if (session != null) {
+                        userProvider.syncFromSession(
+                          session.user.id,
+                          session.user.email,
+                          session.user.appMetadata,
+                        );
+                      } else {
+                        // 세션도 없으면 로그인으로
+                         Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                      }
+                    },
+                    child: const Text('재시도'),
+                  ),
+                ],
+              ),
+            );
           }
 
           return SingleChildScrollView(

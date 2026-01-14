@@ -14,7 +14,7 @@ class SubscriptionProvider extends ChangeNotifier {
   PlanTier get currentTier => _subscription.tier;
   bool get isFree => _subscription.isFree;
   bool get isPro => _subscription.isPro;
-  bool get isElite => _subscription.isElite;
+  bool get isMax => _subscription.isMax;
   bool get hasPremium => _subscription.hasPremium;
   
   /// 로드

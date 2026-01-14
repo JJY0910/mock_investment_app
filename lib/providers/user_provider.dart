@@ -79,6 +79,69 @@ class UserProvider extends ChangeNotifier {
     return _currentUser!;
   }
   
+  /// 세션 기반 동기화 (AuthGate에서 호출)
+  Future<void> syncFromSession(String userId, String? email, Map<String, dynamic>? metadata) async {
+    _loading = true;
+    notifyListeners();
+    
+    try {
+      final authService = AuthService();
+      final profile = await authService.fetchProfile(userId);
+      
+      String provider = 'email';
+      String providerUserId = userId;
+      
+      if (metadata != null) {
+        provider = metadata['provider'] ?? 'email';
+        providerUserId = metadata['provider_id'] ?? userId;
+      }
+      
+      if (profile != null) {
+        // 기존 프로필 존재 -> 로드
+        final nickname = profile['nickname'] as String?;
+        final isNicknameSet = nickname != null && nickname.isNotEmpty;
+        
+        // 기존 정보 유지하면서 업데이트 or 새로 생성
+        _currentUser = User(
+          id: userId,
+          provider: provider,
+          providerUserId: providerUserId,
+          email: email,
+          nickname: nickname ?? '',
+          nicknameSet: isNicknameSet,
+          createdAt: _currentUser?.createdAt ?? DateTime.parse(profile['created_at'] ?? DateTime.now().toIso8601String()),
+          lastLoginAt: DateTime.now(),
+        );
+        
+        print('[UserProvider] Synced existing user: $nickname (Set: $isNicknameSet)');
+      } else {
+        // 프로필 없음 -> 신규 유저 취급
+        _currentUser = User.create(
+          provider: provider,
+          providerUserId: providerUserId,
+          email: email,
+        );
+        print('[UserProvider] Created fresh user state (needs nickname)');
+      }
+      
+      await _save();
+      
+    } catch (e) {
+      print('[UserProvider] Sync error: $e');
+      // 에러 시에도 최소한의 유저 상태는 생성해서 무한 로딩 방지
+      if (_currentUser == null) {
+         _currentUser = User.create(
+          provider: 'unknown',
+          providerUserId: userId,
+          email: email,
+        );
+      }
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
+  }
+  
   /// 닉네임 설정 (Supabase profiles에 저장)
   Future<bool> setNickname(String nickname) async {
     if (_currentUser == null) return false;

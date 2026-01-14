@@ -20,8 +20,8 @@ class Subscription {
   
   bool get isFree => tier == PlanTier.free;
   bool get isPro => tier == PlanTier.pro && isActive;
-  bool get isElite => tier == PlanTier.elite && isActive;
-  bool get hasPremium => isPro || isElite;
+  bool get isMax => tier == PlanTier.max && isActive;
+  bool get hasPremium => isPro || isMax;
   
   Map<String, dynamic> toJson() {
     return {

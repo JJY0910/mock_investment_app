@@ -23,6 +23,7 @@ import 'screens/history_screen.dart';
 import 'screens/trade_screen.dart';
 import 'screens/wallet_screen.dart'; // Wallet screen
 import 'screens/rank_screen.dart';
+import 'screens/rankings_screen.dart'; // 새 랭킹 화면
 import 'screens/nickname_screen.dart'; // PHASE 2-2: Nickname onboarding
 import 'screens/pricing_screen.dart'; // PHASE 3: Pricing screen
 import 'screens/profile_screen.dart'; // Profile screen
@@ -246,6 +247,7 @@ class ThemeGate extends StatelessWidget {
             '/history': (context) => const OnboardingGate(child: HistoryScreen()),
             '/nickname': (context) => const NicknameScreen(),
             '/pricing': (context) => const PricingScreen(), // PHASE 3
+            '/rankings': (context) => const OnboardingGate(child: RankingsScreen()), // 새 랭킹
             '/profile': (context) => const OnboardingGate(child: ProfileScreen()), // Profile
           },
         );
@@ -255,8 +257,69 @@ class ThemeGate extends StatelessWidget {
 }
 
 // Phase 3-3: AuthGate separates routing based on session
-class AuthGate extends StatelessWidget {
+class AuthGate extends StatefulWidget {
   const AuthGate({Key? key}) : super(key: key);
+
+  @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
+  bool _isSyncing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkSync();
+  }
+
+  void _checkSync() {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final session = authProvider.session;
+    
+    // 세션이 있고 아직 동기화 전이면 동기화 시작
+    if (session != null) {
+      _syncUser(session);
+    }
+  }
+
+  Future<void> _syncUser(Session session) async {
+    if (_isSyncing) return;
+    
+    setState(() => _isSyncing = true);
+    
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      
+      // 이미 로드된 유저가 현재 세션과 일치하면 스킵
+      if (userProvider.isLoggedIn && userProvider.currentUser?.id == session.user.id) {
+        _navigateHome();
+        return;
+      }
+
+      await userProvider.syncFromSession(
+        session.user.id,
+        session.user.email,
+        session.user.appMetadata,
+      );
+      
+      if (mounted) {
+        _navigateHome();
+      }
+    } catch (e) {
+      print('[AuthGate] Sync failed: $e');
+      // 실패해도 일단 홈으로 보내서 에러 처리하게 하거나 로그인으로
+      if (mounted) _navigateHome();
+    } finally {
+      if (mounted) {
+        setState(() => _isSyncing = false);
+      }
+    }
+  }
+
+  void _navigateHome() {
+    Navigator.pushReplacementNamed(context, '/home');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -265,10 +328,26 @@ class AuthGate extends StatelessWidget {
         final session = authProvider.session;
         
         if (session != null) {
-          // Phase 3-3: Logged in → Go to Home Hub
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.pushReplacementNamed(context, '/home');
-          });
+          // 세션 감지 시 동기화 시도 (initState에서 놓친 경우)
+          if (!_isSyncing) {
+             WidgetsBinding.instance.addPostFrameCallback((_) {
+               _syncUser(session);
+             });
+          }
+          
+          return const Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                   CircularProgressIndicator(),
+                   SizedBox(height: 16),
+                   Text('사용자 정보 동기화 중...', style: TextStyle(color: Colors.grey)),
+                ],
+              ),
+            ),
+          );
         }
         
         // Show Login by default

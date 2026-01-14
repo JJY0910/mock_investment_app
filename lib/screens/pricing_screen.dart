@@ -55,7 +55,7 @@ class PricingScreen extends StatelessWidget {
                             const SizedBox(width: 16),
                             Expanded(child: _buildPlanCard(context, PlanTier.pro, featured: true)),
                             const SizedBox(width: 16),
-                            Expanded(child: _buildPlanCard(context, PlanTier.elite)),
+                            Expanded(child: _buildPlanCard(context, PlanTier.max)),
                           ],
                         );
                       } else {
@@ -65,7 +65,7 @@ class PricingScreen extends StatelessWidget {
                             const SizedBox(height: 16),
                             _buildPlanCard(context, PlanTier.pro, featured: true),
                             const SizedBox(height: 16),
-                            _buildPlanCard(context, PlanTier.elite),
+                            _buildPlanCard(context, PlanTier.max),
                           ],
                         );
                       }
@@ -141,14 +141,14 @@ class PricingScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  tier.monthlyPrice == 0 ? '무료' : '\$${tier.monthlyPrice.toStringAsFixed(2)}',
+                  tier.monthlyPriceKrw == 0 ? '무료' : '₩${tier.monthlyPriceKrw.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')}',
                   style: const TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
                     color: Colors.blue,
                   ),
                 ),
-                if (tier.monthlyPrice > 0)
+                if (tier.monthlyPriceKrw > 0)
                   const Padding(
                     padding: EdgeInsets.only(bottom: 4, left: 4),
                     child: Text(
@@ -245,7 +245,7 @@ class PricingScreen extends StatelessWidget {
     );
   }
   
-  Widget _buildComparisonRow(String feature, bool free, bool pro, bool elite) {
+  Widget _buildComparisonRow(String feature, bool free, bool pro, bool max) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -256,7 +256,7 @@ class PricingScreen extends StatelessWidget {
           ),
           Expanded(child: _buildCheckIcon(free)),
           Expanded(child: _buildCheckIcon(pro)),
-          Expanded(child: _buildCheckIcon(elite)),
+          Expanded(child: _buildCheckIcon(max)),
         ],
       ),
     );
@@ -289,7 +289,7 @@ class PricingScreen extends StatelessWidget {
           _PlanFeature('Daily 메시지', true),
           _PlanFeature('Weekly 리포트', false),
         ];
-      case PlanTier.elite:
+      case PlanTier.max:
         return [
           _PlanFeature('Pro 전체 기능', true),
           _PlanFeature('Weekly 리포트', true),
@@ -306,7 +306,7 @@ class PricingScreen extends StatelessWidget {
     // GA4: begin_checkout event
     AnalyticsService.logBeginCheckout(
       itemName: '${tier.displayName} Plan',
-      value: tier.monthlyPrice,
+      value: tier.monthlyPriceKrw.toDouble(),
     );
     
     // Mock 업그레이드

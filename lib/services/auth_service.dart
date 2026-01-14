@@ -63,6 +63,22 @@ class AuthService {
       rethrow;
     }
   }
+
+  /// 사용자 프로필 조회
+  Future<Map<String, dynamic>?> fetchProfile(String userId) async {
+    try {
+      final response = await _supabase
+          .from('profiles')
+          .select()
+          .eq('id', userId)
+          .maybeSingle();
+      
+      return response;
+    } catch (e) {
+      print('[AuthService] Profile fetch error: $e');
+      return null;
+    }
+  }
   
   /// 닉네임 중복 체크
   Future<bool> checkNicknameDuplicate(String nickname) async {

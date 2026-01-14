@@ -4,6 +4,9 @@ import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/trader_score_provider.dart';
 import '../providers/user_provider.dart';
+import '../providers/portfolio_provider.dart'; // Portfolio
+import '../providers/price_provider.dart'; // Price
+import '../services/snapshot_service.dart'; // Snapshot
 import '../services/disclaimer_service.dart';
 import '../widgets/disclaimer_dialog.dart';
 
@@ -21,7 +24,55 @@ class _HomeHubScreenState extends State<HomeHubScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkDisclaimer();
+      _recordDailySnapshot(); // 일일 스냅샷 기록
     });
+  }
+
+  /// 일일 자산 스냅샷 기록
+  Future<void> _recordDailySnapshot() async {
+    if (!mounted) return;
+    
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final portfolioProvider = Provider.of<PortfolioProvider>(context, listen: false);
+      final priceProvider = Provider.of<PriceProvider>(context, listen: false);
+      
+      // 1. 유저 ID 확인
+      final userId = userProvider.currentUser?.id;
+      if (userId == null) return;
+      
+      // 2. 포트폴리오 로딩 대기 (이미 로드되었겠지만 안전장치)
+      if (portfolioProvider.loading) {
+        await Future.delayed(const Duration(milliseconds: 500));
+      }
+      
+      // 3. 보유 코인 가격 최신화
+      final holdings = portfolioProvider.holdings;
+      if (holdings.isNotEmpty) {
+        final Map<String, String> symbols = {};
+        for (final holding in holdings) {
+          symbols[holding.pairKey] = 'crypto'; // 기본값 (추후 확장 가능)
+        }
+        
+        // 가격 업데이트 요청 (이미 진행 중이면 무시되거나 병합됨)
+        await priceProvider.updatePrices(symbols);
+      }
+      
+      
+      // 4. 총자산 계산 (현금 + 평가금액)
+      final priceMap = priceProvider.prices.map((key, value) => MapEntry(key, value.price));
+      final totalAssets = portfolioProvider.getTotalValueKrw(priceMap);
+      
+      // 5. 스냅샷 서비스 호출
+      final snapshotService = SnapshotService();
+      await snapshotService.ensureDailySnapshot(
+        userId: userId,
+        totalAssets: totalAssets,
+      );
+      
+    } catch (e) {
+      print('[HomeHubScreen] Snapshot error: $e');
+    }
   }
 
   Future<void> _checkDisclaimer() async {
