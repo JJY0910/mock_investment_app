@@ -11,10 +11,9 @@ import '../features/trade/widgets/timeframe_bar.dart';
 import '../features/trade/widgets/trade_layout.dart';
 import '../features/trade/widgets/trade_bottom_section.dart';
 import '../features/trade/widgets/market_info_tabs.dart';
-import '../widgets/ai_coach_card.dart'; // PHASE 2-3: AI 코치
+import '../widgets/ai_coach_card.dart';
 
-
-/// Trading Platform Screen with Chart, Orders, and Balance
+/// Trading Platform Screen - FIXED LAYOUT
 class TradeScreen extends StatefulWidget {
   const TradeScreen({Key? key}) : super(key: key);
 
@@ -26,7 +25,6 @@ class _TradeScreenState extends State<TradeScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize price updates
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final priceProvider = Provider.of<PriceProvider>(context, listen: false);
       priceProvider.startPeriodicUpdate({
@@ -53,47 +51,43 @@ class _TradeScreenState extends State<TradeScreen> {
         
         return Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          // FIX: Use Column with Expanded instead of SingleChildScrollView
-          // This prevents LayoutBuilder from receiving unbounded height
-          body: Column(
-            children: [
-              // 상단: AppHeader
-              const AppHeader(),
-              
-              // 헤더 아래: MarketSummaryBar
-              const MarketSummaryBar(),
-              
-              // 타임프레임 바 (차트 바로 위)
-              const TimeframeBar(),
-              
-              // 시세/정보 탭 + 4지표
-              const MarketInfoTabs(),
-              
-              // Main content: TradeLayout with proper constraints
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      TradeLayout(
-                        selectedSymbol: selectedSymbol,
-                        onCoinSelected: _onSymbolChanged,
-                        chartPanel: const ChartPanel(),
-                        orderPanel: const OrderPanel(),
-                        bottomTabs: const BottomTabs(),
-                      ),
-                      
-                      // 2nd viewport: 호가+주문 패널
-                      const TradeBottomSection(),
-                      
-                      // PHASE 2-3: AI 코치 카드 (최하단)
-                      const SizedBox(height: 16),
-                      const AICoachCard(),
-                      const SizedBox(height: 32),
-                    ],
+          // FIXED: SafeArea + ListView replaces problematic Column+Expanded+SingleChildScrollView combo
+          body: SafeArea(
+            child: ListView(
+              children: [
+                // 상단: AppHeader
+                const AppHeader(),
+                
+                // 헤더 아래: MarketSummaryBar
+                const MarketSummaryBar(),
+                
+                // 타임프레임 바
+                const TimeframeBar(),
+                
+                // 시세/정보 탭 + 4지표
+                const MarketInfoTabs(),
+                
+                // Main content: TradeLayout (fixed height)
+                SizedBox(
+                  height: 800, // Fixed height container
+                  child: TradeLayout(
+                    selectedSymbol: selectedSymbol,
+                    onCoinSelected: _onSymbolChanged,
+                    chartPanel: const ChartPanel(),
+                    orderPanel: const OrderPanel(),
+                    bottomTabs: const BottomTabs(),
                   ),
                 ),
-              ),
-            ],
+                
+                // 호가+주문 패널
+                const TradeBottomSection(),
+                
+                // AI 코치 카드
+                const SizedBox(height: 16),
+                const AICoachCard(),
+                const SizedBox(height: 32),
+              ],
+            ),
           ),
         );
       },
