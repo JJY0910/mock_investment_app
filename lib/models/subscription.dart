@@ -32,11 +32,23 @@ class Subscription {
   }
   
   factory Subscription.fromJson(Map<String, dynamic> json) {
+    // Safe parsing of tier with fallback
+    PlanTier tier = PlanTier.free;
+    
+    try {
+      final tierValue = json['tier'];
+      if (tierValue is String) {
+        tier = PlanTier.values.firstWhere(
+          (t) => t.name == tierValue,
+          orElse: () => PlanTier.free,
+        );
+      }
+    } catch (e) {
+      print('[Subscription] Error parsing tier: $e, defaulting to free');
+    }
+    
     return Subscription(
-      tier: PlanTier.values.firstWhere(
-        (t) => t.name == json['tier'],
-        orElse: () => PlanTier.free,
-      ),
+      tier: tier,
       startedAt: json['startedAt'] != null ? DateTime.parse(json['startedAt']) : null,
       expiresAt: json['expiresAt'] != null ? DateTime.parse(json['expiresAt']) : null,
     );

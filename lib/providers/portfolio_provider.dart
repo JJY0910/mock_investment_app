@@ -171,16 +171,16 @@ class PortfolioProvider extends ChangeNotifier {
           f.time.isAfter(DateTime.now().subtract(const Duration(days: 30)))
         ).toList();
         
-        final scoreDelta = await scoreProvider.onTradeFilled(
+        await scoreProvider.onTradeFilled(
           fill: fill,
           trades30d: trades30d,
-        ) - scoreProvider.currentScore;
+        );
         
         // GA4: trade_completed event
         AnalyticsService.logTradeCompleted(
           tradeType: 'buy',
           symbol: coin.symbol,
-          amount: quantity, // 수량
+          amount: buyQty, // 수량
         );
       }
 
@@ -254,10 +254,10 @@ class PortfolioProvider extends ChangeNotifier {
           f.time.isAfter(DateTime.now().subtract(const Duration(days: 30)))
         ).toList();
         
-        final scoreDelta = await scoreProvider.onTradeFilled(
+        await scoreProvider.onTradeFilled(
           fill: fill,
           trades30d: trades30d,
-        ) - scoreProvider.currentScore;
+        );
         
         // GA4: trade_completed event
         AnalyticsService.logTradeCompleted(

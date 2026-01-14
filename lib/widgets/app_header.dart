@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
+import '../providers/user_provider.dart';
 import '../services/auth_service.dart';
 
 /// 트랩클 메인 헤더
@@ -81,9 +82,9 @@ class AppHeader extends StatelessWidget {
         // 우측: 내정보
         _buildIconButton(
           context,
-          icon: Icons.info_outline,
-          label: '앱정보',
-          onTap: () => Navigator.pushNamed(context, '/settings'),
+          icon: Icons.person_outline,
+          label: '내정보',
+          onTap: () => Navigator.pushNamed(context, '/profile'),
         ),
       ],
     );
@@ -249,8 +250,12 @@ class AppHeader extends StatelessWidget {
 
   // 로그아웃 처리
   void _handleLogout(BuildContext context) async {
-    final authService = Provider.of<AuthService>(context, listen: false);
+    final authService = AuthService();
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    
     await authService.signOut();
+    await userProvider.logout();
+    
     if (context.mounted) {
       Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
     }
@@ -258,8 +263,6 @@ class AppHeader extends StatelessWidget {
 
   // 내정보 처리
   void _handleMyInfo(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('내정보 페이지 (준비 중)')),
-    );
+    Navigator.pushNamed(context, '/profile');
   }
 }

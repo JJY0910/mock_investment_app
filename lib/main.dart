@@ -25,6 +25,8 @@ import 'screens/wallet_screen.dart'; // Wallet screen
 import 'screens/rank_screen.dart';
 import 'screens/nickname_screen.dart'; // PHASE 2-2: Nickname onboarding
 import 'screens/pricing_screen.dart'; // PHASE 3: Pricing screen
+import 'screens/profile_screen.dart'; // Profile screen
+import 'services/analytics_service.dart'; // GA4 Analytics
 
 // Import conditional url_helper for web-specific operations
 import 'providers/url_helper_stub.dart'
@@ -192,6 +194,10 @@ class ThemeGate extends StatelessWidget {
           );
         }
 
+        // Initialize AnalyticsService with SubscriptionProvider
+        final subscriptionProvider = Provider.of<SubscriptionProvider>(context, listen: false);
+        AnalyticsService.init(subscriptionProvider);
+
         // Theme loaded, show main app
         return MaterialApp(
           title: 'Trader Lab',
@@ -210,6 +216,7 @@ class ThemeGate extends StatelessWidget {
             '/history': (context) => const OnboardingGate(child: HistoryScreen()),
             '/nickname': (context) => const NicknameScreen(),
             '/pricing': (context) => const PricingScreen(), // PHASE 3
+            '/profile': (context) => const OnboardingGate(child: ProfileScreen()), // Profile
           },
         );
       },

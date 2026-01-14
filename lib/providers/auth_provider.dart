@@ -114,8 +114,14 @@ class AuthProvider extends ChangeNotifier {
           // 프로필 생성 시도
           try {
             addLog('Upserting profile...');
-            await _authService.upsertUserProfile(_currentUser!);
-            addLog('Profile upserted.');
+            // upsertUserProfile now requires named parameters
+            // For now skip - will be called from nickname screen
+            // await _authService.upsertUserProfile(
+            //   userId: _currentUser!.id,
+            //   nickname: 'temp',
+            //   email: _currentUser!.email,
+            // );
+            addLog('Profile upsert skipped (will be set in nickname screen).');
           } catch(e) {
             addLog('Profile upsert error: $e');
           }

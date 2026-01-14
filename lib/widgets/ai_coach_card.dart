@@ -3,10 +3,18 @@ import 'package:provider/provider.dart';
 import '../providers/trader_score_provider.dart';
 import '../providers/subscription_provider.dart'; // PHASE 3
 import '../models/coach_badge.dart';
+import '../services/analytics_service.dart'; // GA4 Analytics
 
 /// AI 코치 카드 (TradeScreen 하단) - 3블록 버전
-class AICoachCard extends StatelessWidget {
+class AICoachCard extends StatefulWidget {
   const AICoachCard({Key? key}) : super(key: key);
+
+  @override
+  State<AICoachCard> createState() => _AICoachCardState();
+}
+
+class _AICoachCardState extends State<AICoachCard> {
+  bool _viewEventSent = false;
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +22,18 @@ class AICoachCard extends StatelessWidget {
       builder: (context, scoreProvider, subscriptionProvider, child) {
         final feedback = scoreProvider.lastFeedback;
         final hasPremium = subscriptionProvider.hasPremium;
+        
+        // Send view event once per session when feedback exists
+        if (feedback != null && !_viewEventSent) {
+          _viewEventSent = true;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            AnalyticsService.logCoachCardViewed(
+              coachLocked: !hasPremium,
+              scoreCurrent: scoreProvider.currentScore,
+              badgesCount: _getBadgesCount(scoreProvider),
+            );
+          });
+        }
         
         if (feedback == null) {
           return Card(
@@ -124,7 +144,13 @@ class AICoachCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 12),
                         ElevatedButton(
-                          onPressed: () => Navigator.pushNamed(context, '/pricing'),
+                          onPressed: () {
+                            // GA4: coach upgrade prompt click
+                            AnalyticsService.logCoachUpgradePromptClick(
+                              entryPoint: 'ai_coach_card',
+                            );
+                            Navigator.pushNamed(context, '/pricing');
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,
                             foregroundColor: Colors.white,
@@ -265,5 +291,10 @@ class AICoachCard extends StatelessWidget {
         ],
       ),
     );
+  }
+  
+  int _getBadgesCount(TraderScoreProvider scoreProvider) {
+    // Count non-rookie badges
+    return scoreProvider.currentBadge == CoachBadge.rookie ? 0 : 1;
   }
 }

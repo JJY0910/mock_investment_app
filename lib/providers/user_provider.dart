@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/user.dart';
+import '../services/auth_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 
 /// User Provider (닉네임 온보딩 시스템)
 class UserProvider extends ChangeNotifier {
@@ -77,23 +79,41 @@ class UserProvider extends ChangeNotifier {
     return _currentUser!;
   }
   
-  /// 닉네임 설정
+  /// 닉네임 설정 (Supabase profiles에 저장)
   Future<bool> setNickname(String nickname) async {
     if (_currentUser == null) return false;
     
-    // TODO: 서버 API 호출하여 중복 체크 및 저장
-    // 현재는 로컬만
-    
-    _currentUser = _currentUser!.copyWith(
-      nickname: nickname,
-      nicknameSet: true,
-    );
-    
-    await _save();
-    notifyListeners();
-    
-    print('[UserProvider] Nickname set: $nickname');
-    return true;
+    try {
+      final authService = AuthService();
+      final supabaseUser = Supabase.instance.client.auth.currentUser;
+      
+      if (supabaseUser == null) {
+        print('[UserProvider] No Supabase user found');
+        throw Exception('로그인 세션이 만료되었습니다');
+      }
+      
+      // Supabase profiles에 저장 (DB 트리거가 규칙 체크)
+      await authService.upsertUserProfile(
+        userId: supabaseUser.id,
+        nickname: nickname,
+        email: supabaseUser.email,
+      );
+      
+      // 로컬 업데이트
+      _currentUser = _currentUser!.copyWith(
+        nickname: nickname,
+        nicknameSet: true,
+      );
+      
+      await _save();
+      notifyListeners();
+      
+      print('[UserProvider] Nickname set: $nickname');
+      return true;
+    } catch (e) {
+      print('[UserProvider] Nickname set error: $e');
+      rethrow; // Let caller handle the error
+    }
   }
   
   /// 로그아웃
@@ -139,14 +159,14 @@ class UserProvider extends ChangeNotifier {
     return null; // 유효함
   }
   
-  /// 닉네임 중복 체크 (TODO: 서버 API)
+  /// 닉네임 중복 체크 (Supabase profiles)
   Future<bool> checkNicknameDuplicate(String nickname) async {
-    // TODO: 서버 API 호출
-    // 현재는 로컬 mock
-    await Future.delayed(const Duration(milliseconds: 300));
-    
-    // 임시로 특정 닉네임만 중복으로 처리
-    final reserved = ['관리자', 'admin', 'test', '테스트'];
-    return reserved.contains(nickname.toLowerCase());
+    try {
+      final authService = AuthService();
+      return await authService.checkNicknameDuplicate(nickname);
+    } catch (e) {
+      print('[UserProvider] Duplicate check error: $e');
+      return false;
+    }
   }
 }

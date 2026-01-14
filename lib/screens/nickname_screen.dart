@@ -53,23 +53,26 @@ class _NicknameScreenState extends State<NicknameScreen> {
       return;
     }
     
-    // 저장
+    // 저장 (DB 트리거가 추가 규칙 체크)
     setState(() {
       _isChecking = false;
       _isSaving = true;
     });
     
-    final success = await userProvider.setNickname(nickname);
-    
-    if (success && mounted) {
-      // GA4: sign_up event
-      AnalyticsService.logSignUp(method: 'nickname_onboarding');
+    try {
+      await userProvider.setNickname(nickname);
       
-      Navigator.pushReplacementNamed(context, '/home');
-    } else {
+      if (mounted) {
+        // GA4: sign_up event
+        AnalyticsService.logSignUp(method: 'nickname_onboarding');
+        
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    } catch (e) {
       setState(() {
         _isSaving = false;
-        _errorMessage = '닉네임 저장 실패';
+        // Extract user-friendly message from exception
+        _errorMessage = e.toString().replaceAll('Exception: ', '');
       });
     }
   }

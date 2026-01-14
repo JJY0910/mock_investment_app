@@ -6,6 +6,7 @@ import '../models/coach_feedback.dart';
 import '../models/coach_badge.dart';
 import '../services/trader_score_engine.dart';
 import '../services/score_engine_config.dart';
+import '../services/analytics_service.dart'; // GA4 Analytics
 
 /// 트레이더 점수 Provider
 /// 
@@ -263,7 +264,18 @@ class TraderScoreProvider extends ChangeNotifier {
       _lastHabitAppliedAt = now;
       
       // PHASE 2-3-2: 배지 재계산 및 Daily 메시지 생성
+      final oldBadge = _currentBadge;
       _currentBadge = _calculateBadge(trades30d, trades7d);
+      
+      // GA4: badge earned event (if badge changed)
+      if (_currentBadge != oldBadge && _currentBadge != CoachBadge.rookie) {
+        AnalyticsService.logCoachBadgeEarned(
+          badgeId: _currentBadge.name,
+          badgeName: _currentBadge.displayName,
+          scoreAtEarn: newScore,
+        );
+      }
+      
       _dailyCoachMessage = _generateDailyMessage(delta, trades30d, trades7d);
       _dailyCoachAt = now;
       
