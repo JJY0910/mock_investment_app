@@ -35,6 +35,36 @@ import 'providers/url_helper_stub.dart'
 void main() async {
   // [CRITICAL] Initialize Flutter FIRST before ANY other operations
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // [GLOBAL ERROR BOUNDARY] Show proper error UI instead of grey screen on widget crashes
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    print('[ErrorWidget] Caught error: ${details.exception}');
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.warning_amber_rounded, size: 64, color: Colors.orange),
+                const SizedBox(height: 16),
+                const Text('화면을 불러오는 중 오류가 발생했습니다.', textAlign: TextAlign.center),
+                const SizedBox(height: 8),
+                Text('${details.exception}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {}, // Page refresh via browser needed
+                  child: const Text('새로고침 (F5)'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  };
+  
   // NOTE: usePathUrlStrategy() removed - it crashes when URL has query params
   // Will use default hash routing (#/) which is safer for OAuth callbacks
   
