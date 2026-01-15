@@ -361,11 +361,29 @@ class _AuthGateState extends State<AuthGate> {
 
 
 // PHASE 2-2: OnboardingGate - 닉네임 미설정 시 강제 이동
-class OnboardingGate extends StatelessWidget {
+class OnboardingGate extends StatefulWidget {
   final Widget child;
   
   const OnboardingGate({Key? key, required this.child}) : super(key: key);
   
+  @override
+  State<OnboardingGate> createState() => _OnboardingGateState();
+}
+
+class _OnboardingGateState extends State<OnboardingGate> {
+  bool _isRedirecting = false;
+
+  void _redirectTo(String route) {
+    if (_isRedirecting) return;
+    _isRedirecting = true;
+    
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, route);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(
@@ -373,7 +391,14 @@ class OnboardingGate extends StatelessWidget {
         // [GUARD LOG] Log routing decision
         final user = userProvider.currentUser;
         final supabaseSession = Supabase.instance.client.auth.currentSession;
-        print('[OnboardingGate] State: loading=${userProvider.loading}, user=${user?.id}, nickname=${user?.nickname}, needsNickname=${userProvider.needsNickname}, hasSupabaseSession=${supabaseSession != null}');
+        print('[OnboardingGate] State: loading=${userProvider.loading}, user=${user?.id}, nickname=${user?.nickname}, needsNickname=${userProvider.needsNickname}, hasSupabaseSession=${supabaseSession != null}, _isRedirecting=$_isRedirecting');
+        
+        // 이미 리다이렉트 중이면 스피너만 표시
+        if (_isRedirecting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
         
         // 로딩 중이면 로딩 표시
         if (userProvider.loading) {
@@ -386,11 +411,8 @@ class OnboardingGate extends StatelessWidget {
         // [CRITICAL FIX] Check for valid Supabase session - cached user without session is stale
         if (supabaseSession == null) {
           print('[OnboardingGate] NO SUPABASE SESSION: redirecting to AuthGate (root)');
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            // Clear stale cached user
-            userProvider.logout();
-            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-          });
+          _redirectTo('/');
+          userProvider.logout();
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
@@ -399,9 +421,7 @@ class OnboardingGate extends StatelessWidget {
         // [ASSERTION] User must exist after sync
         if (user == null) {
           print('[OnboardingGate] ASSERTION FAILED: user is null after sync, redirecting to login');
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.pushReplacementNamed(context, '/login');
-          });
+          _redirectTo('/login');
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
@@ -410,9 +430,7 @@ class OnboardingGate extends StatelessWidget {
         // 닉네임 미설정이면 즉시 /nickname으로 이동
         if (userProvider.needsNickname) {
           print('[OnboardingGate] DECISION: Redirect to /nickname (nickname not set)');
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.pushReplacementNamed(context, '/nickname');
-          });
+          _redirectTo('/nickname');
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
@@ -420,7 +438,7 @@ class OnboardingGate extends StatelessWidget {
         
         // 정상: child 렌더
         print('[OnboardingGate] DECISION: Render child (nickname OK)');
-        return child;
+        return widget.child;
       },
     );
   }
