@@ -54,11 +54,24 @@ class _NicknameScreenState extends State<NicknameScreen> {
         Navigator.pushReplacementNamed(context, '/home');
       }
     } catch (e) {
+      final errorMsg = e.toString().replaceAll('Exception: ', '');
+      print('[NicknameScreen] RPC FAILED: $errorMsg');
+      
       setState(() {
         _isSaving = false;
-        // Extract user-friendly message from exception
-        _errorMessage = e.toString().replaceAll('Exception: ', '');
+        _errorMessage = errorMsg;
       });
+      
+      // [HARDENING] Show explicit SnackBar for immediate UX feedback
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMsg),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
     }
   }
   

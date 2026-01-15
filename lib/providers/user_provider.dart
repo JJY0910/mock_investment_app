@@ -85,6 +85,14 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
     
     try {
+      // [HARDENING] Clear stale nickname cache BEFORE sync to prevent ghost data
+      if (_currentUser != null && _currentUser!.id != userId) {
+        print('[UserProvider] Cache invalidation: clearing stale user ${_currentUser!.id} for new session $userId');
+        _currentUser = null;
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove(_storageKey);
+      }
+      
       final authService = AuthService();
       print('[UserProvider] syncFromSession: userId=$userId, email=$email');
       final profile = await authService.fetchProfile(userId);
@@ -117,6 +125,7 @@ class UserProvider extends ChangeNotifier {
         );
         
         print('[UserProvider] Synced existing user: $nickname (Set: $isNicknameSet)');
+        print('[UserProvider] ROUTING DECISION: needsNickname=${!isNicknameSet} (source: DB profile)');
       } else {
         // 프로필 없음 -> 신규 유저 취급
         _currentUser = User.create(
@@ -126,6 +135,7 @@ class UserProvider extends ChangeNotifier {
         );
         // nicknameChangedOnce defaults to false in User.create
         print('[UserProvider] Created fresh user state (needs nickname)');
+        print('[UserProvider] ROUTING DECISION: needsNickname=true (source: no DB profile, new user)');
       }
       
       await _save();

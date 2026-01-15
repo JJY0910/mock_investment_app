@@ -369,8 +369,24 @@ class OnboardingGate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(
       builder: (context, userProvider, _) {
+        // [GUARD LOG] Log routing decision
+        final user = userProvider.currentUser;
+        print('[OnboardingGate] State: loading=${userProvider.loading}, user=${user?.id}, nickname=${user?.nickname}, needsNickname=${userProvider.needsNickname}');
+        
         // 로딩 중이면 로딩 표시
         if (userProvider.loading) {
+          print('[OnboardingGate] DECISION: Show loading spinner (sync in progress)');
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        
+        // [ASSERTION] User must exist after sync
+        if (user == null) {
+          print('[OnboardingGate] ASSERTION FAILED: user is null after sync, redirecting to login');
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pushReplacementNamed(context, '/login');
+          });
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
@@ -378,6 +394,7 @@ class OnboardingGate extends StatelessWidget {
         
         // 닉네임 미설정이면 즉시 /nickname으로 이동
         if (userProvider.needsNickname) {
+          print('[OnboardingGate] DECISION: Redirect to /nickname (nickname not set)');
           WidgetsBinding.instance.addPostFrameCallback((_) {
             Navigator.pushReplacementNamed(context, '/nickname');
           });
@@ -387,6 +404,7 @@ class OnboardingGate extends StatelessWidget {
         }
         
         // 정상: child 렌더
+        print('[OnboardingGate] DECISION: Render child (nickname OK)');
         return child;
       },
     );
