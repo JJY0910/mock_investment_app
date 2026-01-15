@@ -388,10 +388,9 @@ class _OnboardingGateState extends State<OnboardingGate> {
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(
       builder: (context, userProvider, _) {
-        // [GUARD LOG] Log routing decision
+        // [GUARD LOG] Minimized logging to prevent spam
         final user = userProvider.currentUser;
         final supabaseSession = Supabase.instance.client.auth.currentSession;
-        print('[OnboardingGate] State: loading=${userProvider.loading}, user=${user?.id}, nickname=${user?.nickname}, needsNickname=${userProvider.needsNickname}, hasSupabaseSession=${supabaseSession != null}, _isRedirecting=$_isRedirecting');
         
         // 이미 리다이렉트 중이면 스피너만 표시
         if (_isRedirecting) {
@@ -402,7 +401,6 @@ class _OnboardingGateState extends State<OnboardingGate> {
         
         // 로딩 중이면 로딩 표시
         if (userProvider.loading) {
-          print('[OnboardingGate] DECISION: Show loading spinner (sync in progress)');
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
@@ -437,7 +435,6 @@ class _OnboardingGateState extends State<OnboardingGate> {
         }
         
         // 정상: child 렌더
-        print('[OnboardingGate] DECISION: Render child (nickname OK)');
         return widget.child;
       },
     );
