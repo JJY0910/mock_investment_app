@@ -371,11 +371,25 @@ class OnboardingGate extends StatelessWidget {
       builder: (context, userProvider, _) {
         // [GUARD LOG] Log routing decision
         final user = userProvider.currentUser;
-        print('[OnboardingGate] State: loading=${userProvider.loading}, user=${user?.id}, nickname=${user?.nickname}, needsNickname=${userProvider.needsNickname}');
+        final supabaseSession = Supabase.instance.client.auth.currentSession;
+        print('[OnboardingGate] State: loading=${userProvider.loading}, user=${user?.id}, nickname=${user?.nickname}, needsNickname=${userProvider.needsNickname}, hasSupabaseSession=${supabaseSession != null}');
         
         // 로딩 중이면 로딩 표시
         if (userProvider.loading) {
           print('[OnboardingGate] DECISION: Show loading spinner (sync in progress)');
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        
+        // [CRITICAL FIX] Check for valid Supabase session - cached user without session is stale
+        if (supabaseSession == null) {
+          print('[OnboardingGate] NO SUPABASE SESSION: redirecting to AuthGate (root)');
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            // Clear stale cached user
+            userProvider.logout();
+            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+          });
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
