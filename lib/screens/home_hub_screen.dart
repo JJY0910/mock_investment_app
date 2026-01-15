@@ -19,6 +19,8 @@ class HomeHubScreen extends StatefulWidget {
 }
 
 class _HomeHubScreenState extends State<HomeHubScreen> {
+  bool _disclaimerChecked = false; // Guard to prevent multiple dialogs
+  
   @override
   void initState() {
     super.initState();
@@ -76,6 +78,9 @@ class _HomeHubScreenState extends State<HomeHubScreen> {
   }
 
   Future<void> _checkDisclaimer() async {
+    if (_disclaimerChecked) return; // Prevent duplicate dialogs
+    _disclaimerChecked = true;
+    
     final accepted = await DisclaimerService.isAccepted();
     if (!accepted && mounted) {
       showDialog(

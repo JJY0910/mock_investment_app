@@ -27387,7 +27387,8 @@ av2:function av2(){},
 av0:function av0(a){this.a=a},
 av1:function av1(a){this.a=a},
 C4:function C4(a){this.a=a},
-Xi:function Xi(){this.c=this.a=null},
+Xi:function Xi(){this.d=!1
+this.c=this.a=null},
 avi:function avi(a){this.a=a},
 avc:function avc(){},
 avb:function avb(){},
@@ -93549,13 +93550,15 @@ break
 case 6:case 1:return A.u(q,r)
 case 2:return A.t(o.at(-1),r)}})
 return A.v($async$qF,r)},
-yC(){var s=0,r=A.w(t.H),q=this,p
+yC(){var s=0,r=A.w(t.H),q,p=this,o
 var $async$yC=A.x(function(a,b){if(a===1)return A.t(b,r)
-for(;;)switch(s){case 0:s=2
+for(;;)switch(s){case 0:if(p.d){s=1
+break}p.d=!0
+s=3
 return A.n(A.a7L(),$async$yC)
-case 2:if(!b&&q.c!=null){p=q.c
-p.toString
-A.Lf(!1,new A.avb(),p,t.z)}return A.u(null,r)}})
+case 3:if(!b&&p.c!=null){o=p.c
+o.toString
+A.Lf(!1,new A.avb(),o,t.z)}case 1:return A.u(q,r)}})
 return A.v($async$yC,r)},
 J(a){var s,r,q,p=null,o=A.Q(a),n=A.Q(a).ok.y
 n=A.a2("Trader Lab",p,p,p,p,A.at(p,p,n==null?p:n.b,p,p,p,p,p,p,p,p,32,p,p,B.J,p,p,!0,p,p,p,p,p,p,p,p),p,p)
