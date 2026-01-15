@@ -86,7 +86,9 @@ class UserProvider extends ChangeNotifier {
     
     try {
       final authService = AuthService();
+      print('[UserProvider] syncFromSession: userId=$userId, email=$email');
       final profile = await authService.fetchProfile(userId);
+      print('[UserProvider] Profile fetch result: $profile');
       
       String provider = 'email';
       String providerUserId = userId;
@@ -109,7 +111,7 @@ class UserProvider extends ChangeNotifier {
           email: email,
           nickname: nickname ?? '',
           nicknameSet: isNicknameSet,
-          nicknameChangedOnce: profile['nickname_changed_once'] as bool? ?? false,
+          nicknameChangedOnce: profile['nickname_changed'] as bool? ?? false,
           createdAt: _currentUser?.createdAt ?? DateTime.parse(profile['created_at'] ?? DateTime.now().toIso8601String()),
           lastLoginAt: DateTime.now(),
         );

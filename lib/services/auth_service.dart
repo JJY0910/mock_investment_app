@@ -51,32 +51,37 @@ class AuthService {
     String? email,
   }) async {
     try {
+      print('[AuthService] upsertUserProfile: calling RPC with nickname=$nickname');
       // Use dedicated RPC for validation/policy
       final rpcResponse = await _supabase.rpc('update_nickname_policy', params: {
         'p_new_nickname': nickname,
       });
       
+      print('[AuthService] RPC Response: $rpcResponse');
       final result = rpcResponse as Map<String, dynamic>;
       if (!result['success']) {
+        print('[AuthService] RPC returned failure: ${result['message']}');
         throw Exception(result['message']);
       }
       
       print('[AuthService] Profile upserted via RPC: $nickname');
-    } catch (e) {
+    } catch (e, stack) {
       print('[AuthService] Profile upsert error: $e');
+      print('[AuthService] Stack: $stack');
       rethrow;
     }
   }
 
-  /// 사용자 프로필 조회
   Future<Map<String, dynamic>?> fetchProfile(String userId) async {
     try {
+      print('[AuthService] fetchProfile: userId=$userId');
       final response = await _supabase
           .from('profiles')
           .select()
           .eq('id', userId)
           .maybeSingle();
       
+      print('[AuthService] fetchProfile result: $response');
       return response;
     } catch (e) {
       print('[AuthService] Profile fetch error: $e');
