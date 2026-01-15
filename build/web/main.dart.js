@@ -92281,11 +92281,13 @@ A.arz.prototype={
 $0(){return this.a.d=!1},
 $S:0}
 A.arB.prototype={
-$3(a,b,c){var s,r=$.dF().b
-r===$&&A.a()
-s=r.geO().c
-if(s!=null){r=this.a
-if(!r.d)$.a5.dy$.push(new A.arA(r,s))
+$3(a,b,c){var s,r,q=$.dF().b
+q===$&&A.a()
+s=q.geO().c
+q=s!=null
+r=this.a
+A.T("[AuthGate] BUILD: session="+q+", _isSyncing="+r.d)
+if(q){if(!r.d)$.a5.dy$.push(new A.arA(r,s))
 return B.Si}return B.wg},
 $S:592}
 A.arA.prototype={

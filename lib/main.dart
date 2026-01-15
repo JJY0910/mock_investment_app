@@ -326,6 +326,7 @@ class _AuthGateState extends State<AuthGate> {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, _) {
         final session = authProvider.session;
+        print('[AuthGate] BUILD: session=${session != null}, _isSyncing=$_isSyncing');
         
         if (session != null) {
           // 세션 감지 시 동기화 시도 (initState에서 놓친 경우)
