@@ -266,27 +266,35 @@ class AuthGate extends StatefulWidget {
 
 class _AuthGateState extends State<AuthGate> {
   bool _isSyncing = false;
+  bool _hasSynced = false; // Guard: only sync once
+  bool _hasNavigated = false; // Guard: only navigate once
 
   @override
   void initState() {
     super.initState();
-    _checkSync();
+    // Check sync after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAndSync();
+    });
   }
 
-  void _checkSync() {
+  void _checkAndSync() {
+    if (_hasSynced || _hasNavigated) return;
+    
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final session = authProvider.session;
     
-    // 세션이 있고 아직 동기화 전이면 동기화 시작
     if (session != null) {
       _syncUser(session);
     }
   }
 
   Future<void> _syncUser(Session session) async {
-    if (_isSyncing) return;
+    if (_isSyncing || _hasSynced) return;
     
-    setState(() => _isSyncing = true);
+    _isSyncing = true;
+    _hasSynced = true;
+    if (mounted) setState(() {});
     
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -308,16 +316,18 @@ class _AuthGateState extends State<AuthGate> {
       }
     } catch (e) {
       print('[AuthGate] Sync failed: $e');
-      // 실패해도 일단 홈으로 보내서 에러 처리하게 하거나 로그인으로
       if (mounted) _navigateHome();
     } finally {
       if (mounted) {
-        setState(() => _isSyncing = false);
+        _isSyncing = false;
+        setState(() {});
       }
     }
   }
 
   void _navigateHome() {
+    if (_hasNavigated) return;
+    _hasNavigated = true;
     Navigator.pushReplacementNamed(context, '/home');
   }
 
@@ -326,33 +336,26 @@ class _AuthGateState extends State<AuthGate> {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, _) {
         final session = authProvider.session;
-        print('[AuthGate] BUILD: session=${session != null}, _isSyncing=$_isSyncing');
         
-        if (session != null) {
-          // 세션 감지 시 동기화 시도 (initState에서 놓친 경우)
-          if (!_isSyncing) {
-             WidgetsBinding.instance.addPostFrameCallback((_) {
-               _syncUser(session);
-             });
-          }
-          
-          return const Scaffold(
-            backgroundColor: Colors.white,
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                   CircularProgressIndicator(),
-                   SizedBox(height: 16),
-                   Text('사용자 정보 동기화 중...', style: TextStyle(color: Colors.grey)),
-                ],
-              ),
-            ),
-          );
+        // No session = show login
+        if (session == null) {
+          return const LoginScreen();
         }
         
-        // Show Login by default
-        return const LoginScreen();
+        // Session exists - show sync spinner (sync triggered by initState)
+        return const Scaffold(
+          backgroundColor: Colors.white,
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                 CircularProgressIndicator(),
+                 SizedBox(height: 16),
+                 Text('사용자 정보 동기화 중...', style: TextStyle(color: Colors.grey)),
+              ],
+            ),
+          ),
+        );
       },
     );
   }
