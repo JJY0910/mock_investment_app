@@ -51,13 +51,17 @@ class AuthService {
     String? email,
   }) async {
     try {
-      await _supabase.from('profiles').upsert({
-        'id': userId,
-        'nickname': nickname,
-        'email': email ?? '',
-        'updated_at': DateTime.now().toIso8601String(),
+      // Use dedicated RPC for validation/policy
+      final rpcResponse = await _supabase.rpc('update_nickname_policy', params: {
+        'p_new_nickname': nickname,
       });
-      print('[AuthService] Profile upserted: $nickname');
+      
+      final result = rpcResponse as Map<String, dynamic>;
+      if (!result['success']) {
+        throw Exception(result['message']);
+      }
+      
+      print('[AuthService] Profile upserted via RPC: $nickname');
     } catch (e) {
       print('[AuthService] Profile upsert error: $e');
       rethrow;
@@ -129,17 +133,15 @@ class AuthService {
     required String newNickname,
   }) async {
     try {
-      // 1. 중복 체크 (앱 선검사)
-      final isDuplicate = await checkNicknameDuplicate(newNickname);
-      if (isDuplicate) {
-        throw Exception('이미 사용 중인 닉네임입니다');
-      }
+      // Use dedicated RPC for validation/policy (uniqueness, banned, changed_once)
+      final rpcResponse = await _supabase.rpc('update_nickname_policy', params: {
+        'p_new_nickname': newNickname,
+      });
       
-      // 2. 업데이트 (DB 트리거가 1회 제한, 금칙어, 형식 체크)
-      await _supabase.from('profiles').update({
-        'nickname': newNickname,
-        'updated_at': DateTime.now().toIso8601String(),
-      }).eq('id', userId);
+      final result = rpcResponse as Map<String, dynamic>;
+      if (!result['success']) {
+        throw Exception(result['message']);
+      }
       
       print('[AuthService] Nickname updated: $newNickname');
       return true;

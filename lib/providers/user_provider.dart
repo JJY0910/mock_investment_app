@@ -109,6 +109,7 @@ class UserProvider extends ChangeNotifier {
           email: email,
           nickname: nickname ?? '',
           nicknameSet: isNicknameSet,
+          nicknameChangedOnce: profile['nickname_changed_once'] as bool? ?? false,
           createdAt: _currentUser?.createdAt ?? DateTime.parse(profile['created_at'] ?? DateTime.now().toIso8601String()),
           lastLoginAt: DateTime.now(),
         );
@@ -121,6 +122,7 @@ class UserProvider extends ChangeNotifier {
           providerUserId: providerUserId,
           email: email,
         );
+        // nicknameChangedOnce defaults to false in User.create
         print('[UserProvider] Created fresh user state (needs nickname)');
       }
       
@@ -162,10 +164,17 @@ class UserProvider extends ChangeNotifier {
         email: supabaseUser.email,
       );
       
-      // 로컬 업데이트
+      // 로컬 업데이트 (닉네임 변경됨 -> changedOnce도 true로 설정해야 하지만, RPC 결과에 따라 다름)
+      // 초기 설정이면 changedOnce = false일 수 있음. 
+      // 하지만 여기서 정확히 알기 어려우므로, 다음 sync 때 정확해짐. 
+      // 일단 UI 반응성을 위해 업데이트하되, 변경 횟수는 보수적으로 처리(이미 설정된 상태에서 변경이면 true).
+      
+      final wasNicknameSet = _currentUser!.nicknameSet;
+      
       _currentUser = _currentUser!.copyWith(
         nickname: nickname,
         nicknameSet: true,
+        nicknameChangedOnce: wasNicknameSet ? true : false,
       );
       
       await _save();

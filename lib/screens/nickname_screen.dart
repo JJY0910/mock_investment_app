@@ -36,29 +36,14 @@ class _NicknameScreenState extends State<NicknameScreen> {
       return;
     }
     
-    // 중복 체크
-    setState(() {
-      _isChecking = true;
-      _errorMessage = null;
-    });
-    
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final isDuplicate = await userProvider.checkNicknameDuplicate(nickname);
-    
-    if (isDuplicate) {
-      setState(() {
-        _isChecking = false;
-        _errorMessage = '이미 사용 중인 닉네임입니다';
-      });
-      return;
-    }
-    
-    // 저장 (DB 트리거가 추가 규칙 체크)
+    // 저장 (DB 트리거 및 RPC가 규칙 체크)
     setState(() {
       _isChecking = false;
       _isSaving = true;
     });
     
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
     try {
       await userProvider.setNickname(nickname);
       

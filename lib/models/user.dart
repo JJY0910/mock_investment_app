@@ -6,6 +6,7 @@ class User {
   final String? email;
   final String nickname;
   final bool nicknameSet;
+  final bool nicknameChangedOnce;
   final DateTime createdAt;
   final DateTime lastLoginAt;
   
@@ -16,6 +17,7 @@ class User {
     this.email,
     required this.nickname,
     required this.nicknameSet,
+    this.nicknameChangedOnce = false,
     required this.createdAt,
     required this.lastLoginAt,
   });
@@ -28,6 +30,7 @@ class User {
       'email': email,
       'nickname': nickname,
       'nicknameSet': nicknameSet,
+      'nicknameChangedOnce': nicknameChangedOnce,
       'createdAt': createdAt.toIso8601String(),
       'lastLoginAt': lastLoginAt.toIso8601String(),
     };
@@ -41,6 +44,7 @@ class User {
       email: json['email'] as String?,
       nickname: json['nickname'] as String? ?? '',
       nicknameSet: json['nicknameSet'] as bool? ?? false,
+      nicknameChangedOnce: json['nicknameChangedOnce'] as bool? ?? false,
       createdAt: DateTime.parse(json['createdAt'] as String),
       lastLoginAt: DateTime.parse(json['lastLoginAt'] as String),
     );
@@ -54,6 +58,7 @@ class User {
     String? email,
     String? nickname,
     bool? nicknameSet,
+    bool? nicknameChangedOnce,
     DateTime? createdAt,
     DateTime? lastLoginAt,
   }) {
@@ -64,6 +69,7 @@ class User {
       email: email ?? this.email,
       nickname: nickname ?? this.nickname,
       nicknameSet: nicknameSet ?? this.nicknameSet,
+      nicknameChangedOnce: nicknameChangedOnce ?? this.nicknameChangedOnce,
       createdAt: createdAt ?? this.createdAt,
       lastLoginAt: lastLoginAt ?? this.lastLoginAt,
     );
@@ -83,6 +89,7 @@ class User {
       email: email,
       nickname: '', // 닉네임 미설정
       nicknameSet: false,
+      nicknameChangedOnce: false,
       createdAt: now,
       lastLoginAt: now,
     );

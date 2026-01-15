@@ -425,13 +425,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: const Text('닉네임 변경'),
-                                subtitle: const Text('닉네임은 1회만 변경 가능합니다.'),
-                                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                                onTap: () {
-                                  setState(() {
-                                    _isChanging = true;
-                                  });
-                                },
+                                subtitle: Text(
+                                  user.nicknameChangedOnce 
+                                      ? '변경 완료 (더 이상 변경 불가)' 
+                                      : '닉네임은 1회만 변경 가능합니다.',
+                                  style: TextStyle(
+                                    color: user.nicknameChangedOnce ? Colors.orange : null,
+                                  ),
+                                ),
+                                trailing: user.nicknameChangedOnce 
+                                    ? const Icon(Icons.check_circle, color: Colors.green, size: 20)
+                                    : const Icon(Icons.arrow_forward_ios, size: 16),
+                                onTap: user.nicknameChangedOnce
+                                    ? null // Disable if already changed
+                                    : () {
+                                        setState(() {
+                                          _isChanging = true;
+                                        });
+                                      },
                               ),
                               const Divider(),
                               ListTile(
